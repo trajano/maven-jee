@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	version="2.0" xmlns="http://java.sun.com/xml/ns/persistence/orm"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence/orm
+      http://java.sun.com/xml/ns/persistence/orm_2_0.xsd">
+	<access>FIELD</access>
+	<named-query name="listText">
+		<query>SELECT t.text FROM TextMessage t</query>
+	</named-query>
+</entity-mappings>

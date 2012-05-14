@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:schema="http://schemas.trajano.net/2013"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema" targetNamespace="http://maven-jee6.trajano.net/"
+	xmlns:tns="http://maven-jee6.trajano.net/" name="ws-mdb-ejb">
+	<types>
+		<xsd:schema>
+			<xsd:import namespace="http://schemas.trajano.net/2013"
+				schemaLocation="schema.xsd" />
+		</xsd:schema>
+	</types>
+	<message name="putTextMessage">
+		<part name="request" element="schema:text" />
+	</message>
+	<message name="listMessages"></message>
+	<message name="listMessagesResponse">
+		<part name="response" element="schema:text-list" />
+	</message>
+	<portType name="BusinessProcess">
+		<operation name="putTextMessage">
+			<documentation>Asynchronously puts a text message into the database.
+			</documentation>
+			<input message="tns:putTextMessage" />
+		</operation>
+		<operation name="listMessages">
+			<documentation>Retrieves a list of messages from the system.
+			</documentation>
+			<input message="tns:listMessages"></input>
+			<output message="tns:listMessagesResponse"></output>
+		</operation>
+	</portType>
+	<binding name="binding" type="tns:BusinessProcess">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+		<operation name="putTextMessage">
+			<soap:operation
+				soapAction="http://maven-jee6.trajano.net/putTextMessage" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+		</operation>
+		<operation name="listMessages">
+			<soap:operation
+				soapAction="http://maven-jee6.trajano.net/listMessages" />
+			<input>
+				<soap:body use="literal" />
+			</input>
+			<output>
+				<soap:body use="literal" />
+			</output>
+		</operation>
+	</binding>
+	<service name="BusinessProcessService">
+		<port name="BusinessProcess" binding="tns:binding">
+			<soap:address location="http://replaced-at-runtime/" />
+		</port>
+	</service>
+</definitions>

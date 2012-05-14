@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>maven-jee6</artifactId>
+	<packaging>pom</packaging>
+	<parent>
+		<groupId>net.trajano.maven-jee6</groupId>
+		<artifactId>maven-jee6-parent</artifactId>
+		<version>1.0.0</version>
+		<relativePath>maven-jee6-parent</relativePath>
+	</parent>
+	<modules>
+		<module>check-configuration</module>
+		<module>cdi-javase</module>
+		<module>derby-database</module>
+		<module>maven-jee6-parent</module>
+		<module>maven-jee6-test</module>
+		<module>ws-mdb-ejb</module>
+	</modules>
+	<distributionManagement>
+		<site>
+			<!-- This is explicitly specified so that the deployed site has no project 
+				ID for the multi-module. -->
+			<id>local</id>
+			<url>file:///${user.dir}/target/deployed-site</url>
+		</site>
+	</distributionManagement>
+</project>
+
