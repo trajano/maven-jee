@@ -1,0 +1,6 @@
+This project represents the parent POM for all the projects in this book.  This provides a single place for all the following:
+
+* copyright and licenses.
+* all the versions that are being used by the dependencies.
+* configuration so that all projects are in the same level of JavaEE for the Maven tooling.
+* configuration for the Maven site reports.

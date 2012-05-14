@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>net.trajano.maven-jee6</groupId>
+		<artifactId>ws-mdb-ejb</artifactId>
+		<version>1.0.0-SNAPSHOT</version>
+	</parent>
+	<properties>
+		<emitted.artifactId>ws-mdb-ejb-emitted</emitted.artifactId>
+	</properties>
+	<artifactId>ws-mdb-ejb-web</artifactId>
+	<packaging>war</packaging>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>maven-jee6-test</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>${emitted.artifactId}</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-antrun-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>generate-sources</phase>
+						<goals>
+							<goal>run</goal>
+						</goals>
+						<configuration>
+							<target>
+								<copy
+									todir="${project.build.directory}/${project.build.finalName}/WEB-INF/wsdl">
+									<fileset
+										dir="${basedir}/../${emitted.artifactId}/src/main/resources/META-INF/wsdl/">
+										<include name="*" />
+									</fileset>
+								</copy>
+								<copy
+									todir="${project.build.directory}/m2e-wtp/web-resources/WEB-INF/wsdl">
+									<fileset
+										dir="${basedir}/../${emitted.artifactId}/src/main/resources/META-INF/wsdl/">
+										<include name="*" />
+									</fileset>
+								</copy>
+							</target>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<artifactId>maven-war-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+</project>

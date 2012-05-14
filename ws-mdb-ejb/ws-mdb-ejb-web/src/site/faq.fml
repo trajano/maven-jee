@@ -1,0 +1,5 @@
+Why is there quite a bit of custom code in the JmsResourceProvider?
+
+This is to simplify the actual code where the JMS resources are used by
+preventing them from actually dealing with the life cycle.  However, it is
+kept to somewhat of a boiler plate style that can be customised appropriately.

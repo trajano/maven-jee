@@ -1,0 +1,147 @@
+	------------------------
+	Checkstyle Configuration
+	------------------------
+	Archimedes Trajano
+	------------------------
+
+About Checkstyle Configuration
+
+	This project provides the {{{http://checkstyle.sourceforge.net/}Checkstyle}}
+	configuration used by the
+	{{{http://maven.apache.org/plugins/maven-checkstyle-plugin/}Maven
+	Checkstyle plugin}}.
+
+	The rules are designed to take advantage of the {{{http://www.eclipse.org}Eclipse}}
+	default formatting settings and code clean-up as much as possible.
+  
+	It also disables some of the styles that the author does not agree on,
+	although it does extend some rules to make things stricter. The following
+	sections itemize the changes to the default Eclipse Checkstyle rule set.
+	
+	* {{AvoidInlineConditionals}}
+	
+	* {{DesignForExtension}}
+
+	* {{FileTabCharacter}}
+	
+	* {{HiddenField}}
+
+	* {{Imports}}
+
+	* {{LineLength}}
+	
+	* {{MagicNumber}}
+	
+	* {{RegexpSinglelineJava}}
+	
+	* {{SuppressionCommentFilter}}
+  
+* <<{{{http://checkstyle.sourceforge.net/config_coding.html#AvoidInlineConditionals}AvoidInlineConditionals}}>>
+
+	Although some junior developers may find this confusing, this short cut can
+	help readability with many translations to and from <<boolean>> values.
+    
++------------------------------------------+
+final char flagCharacter = flag ? 'Y' : 'N';
++------------------------------------------+
+
+	versus
+    
++------------------------------------------+
+final char flagCharacter;
+if (flag) {
+  flagCharacter = 'Y';
+} else {
+  flagCharacter = 'N';
+}
++------------------------------------------+
+
+* <<{{{http://checkstyle.sourceforge.net/config_design.html#DesignForExtension}DesignForExtension}}>>
+
+	Although in theory this check is a good idea, a lot of JEE system
+	components especially JPA cannot function correctly with <<<final>>> classes
+	or methods.  As such this check is disabled by default. 
+
+* <<{{{http://checkstyle.sourceforge.net/config_whitespace.html#FileTabCharacter}FileTabCharacter}}>>
+
+    Eclipse formatting uses <tab> characters by default.
+  
+* <<{{{http://checkstyle.sourceforge.net/config_coding.html#HiddenField}HiddenField}}>>
+
+    This rule is enabled with the following modifiers:
+    
+    * ignoreConstructorParameter: "true"
+
+    * ignoreSetter: "true"
+    
+    These modifiers were enabled to allow us to do the following without having to
+    make up new names for the arguments:
+    
++------------------------------------------+
+public Constructor(final Object field) {
+  this.field = field;
+}
+
+public void setField(final Object field) {
+  this.field = field;
+}
++------------------------------------------+
+
+* <<{{{http://checkstyle.sourceforge.net/config_imports.html}Imports}}>>
+
+    The rules associated with this ruleset are not just enabled, but flagged as
+    <ERROR> in the code. This will flag any developers who do not execute
+    <Organize Imports> on the IDE.
+
+* <<{{{http://checkstyle.sourceforge.net/config_sizes.html#LineLength}LineLength}}>>
+
+	Line lengths are determined automatically with the Eclipse formatter.  That
+	is why this check is disabled.
+
+* <<{{{http://checkstyle.sourceforge.net/config_coding.html#MagicNumber}MagicNumber}}>>
+
+	Although this check is a good idea.  It quickly becomes impractical because it
+	introduces another level of indirection which may lead to many one-off constants
+	that make the source harder to read.
+    
+* <<{{{http://checkstyle.sourceforge.net/config_regexp.html#RegexpSinglelineJava}RegexpSinglelineJava}}>>
+
+    Only Java code was considered to be checked for regular expressions.  These
+    checks all have the parameter <<<ignoreComments>>> set to <<<true>>>.  The
+    primary reason was that {{{http://www.eclipse.org/}Eclipse}} default formatting
+    adds one space at the end of each empty JavaDoc line.  The following lists all
+    the rules that use the <<RegexpSinglelineJava>> module.
+
++---------------------+
+\s+$
++---------------------+
+
+    triggers <Line has trailing spaces.> As noted this is only on Java code.
+    
++---------------------+
+\bSystem\.out\b
++---------------------+
+    
+    triggers <Outputting to system out.> The code should use
+    logging facilities.
+
++---------------------+
+\bSystem\.err\b
++---------------------+
+
+    triggers <Outputting to system err.> The code should use
+    logging facilities.
+ 
++---------------------+
+\.printStackTrace\(\)\b
++---------------------+
+
+    triggers <Printing stack trace.> The code should use
+    logging facilities.  This only pertains to the no-arg version of <printStackTrace>
+    as we may use this method to write the stack trace to a stream if needed.
+      
+* <<{{{http://checkstyle.sourceforge.net/config.html#SuppressionCommentFilter}SuppressionCommentFilter}}>>
+
+    This was explicitly enabled to allow developer leads to disable checks on
+    some blocks of the code if there was no way around the issue that would 
+    not reduce readability.
