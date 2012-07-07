@@ -1,5 +1,11 @@
 package net.trajano.maven_jee6.ws_mdb_ejb_web.test;
 
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.replay;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -9,8 +15,6 @@ import net.trajano.maven_jee6.ws_mdb_ejb_web.BusinessProcessImpl;
 import net.trajano.maven_jee6.ws_mdb_ejb_web.QueueListener;
 import net.trajano.maven_jee6.ws_mdb_ejb_web.TextMessages;
 
-import org.easymock.EasyMock;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -24,40 +28,37 @@ public class MockTest {
 	@Test
 	public void testJmsExceptionFromBusinessProcessImpl() throws Exception {
 		try {
-			final MessageProducer mockMessageProducer = EasyMock
-					.createMock(MessageProducer.class);
-			final Session mockSession = EasyMock.createMock(Session.class);
+			final MessageProducer mockMessageProducer = createMock(MessageProducer.class);
+			final Session mockSession = createMock(Session.class);
 
-			EasyMock.expect(mockSession.createTextMessage("hello")).andThrow(
+			expect(mockSession.createTextMessage("hello")).andThrow(
 					new JMSException("mock"));
-			EasyMock.replay(mockSession);
+			replay(mockSession);
 			final BusinessProcessImpl businessProcessImpl = new BusinessProcessImpl();
 			businessProcessImpl.setMessageProducer(mockMessageProducer);
 			businessProcessImpl.setSession(mockSession);
 			businessProcessImpl.putTextMessage("hello");
 		} catch (final RuntimeException e) {
-			Assert.assertTrue(e.getCause() instanceof JMSException);
-			Assert.assertEquals("mock", e.getCause().getMessage());
+			assertTrue(e.getCause() instanceof JMSException);
+			assertEquals("mock", e.getCause().getMessage());
 		}
 	}
 
 	@Test
 	public void testJmsExceptionFromQueueListener() throws Exception {
 		try {
-			final TextMessages mockTextMessages = EasyMock
-					.createMock(TextMessages.class);
-			final TextMessage mockTextMessage = EasyMock
-					.createMock(TextMessage.class);
+			final TextMessages mockTextMessages = createMock(TextMessages.class);
+			final TextMessage mockTextMessage = createMock(TextMessage.class);
 
-			EasyMock.expect(mockTextMessage.getText()).andThrow(
-					new JMSException("mock"));
-			EasyMock.replay(mockTextMessage);
+			expect(mockTextMessage.getText())
+					.andThrow(new JMSException("mock"));
+			replay(mockTextMessage);
 			final QueueListener queueListener = new QueueListener();
 			queueListener.setTextMessages(mockTextMessages);
 			queueListener.onMessage(mockTextMessage);
 		} catch (final RuntimeException e) {
-			Assert.assertTrue(e.getCause() instanceof JMSException);
-			Assert.assertEquals("mock", e.getCause().getMessage());
+			assertTrue(e.getCause() instanceof JMSException);
+			assertEquals("mock", e.getCause().getMessage());
 		}
 	}
 }

@@ -9,6 +9,7 @@
 		<relativePath>../maven-jee6-parent</relativePath>
 	</parent>
 	<artifactId>cdi-javase</artifactId>
+	<packaging>bundle</packaging>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
@@ -17,5 +18,7 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+	</build>
 </project>
 

@@ -1,5 +1,8 @@
 package net.trajano.maven_jee6.ws_mdb_ejb_web.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
 import javax.jms.Connection;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
@@ -11,7 +14,6 @@ import net.trajano.maven_jee6.ws_mdb_ejb_web.ResourceProducer;
 import net.trajano.maven_jee6.ws_mdb_ejb_web.TextMessage;
 import net.trajano.maven_jee6.ws_mdb_ejb_web.TextMessages;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 public class ResourceProducerTest {
@@ -38,7 +40,7 @@ public class ResourceProducerTest {
 		final TextMessages textMessages = new TextMessages(
 				FactoryProducersUtil.createEntityManager(FactoryProducersUtil
 						.createEntityManagerFactory()));
-		Assert.assertEquals(0, textMessages.listText().size());
+		assertEquals(0, textMessages.listText().size());
 	}
 
 	@Test
@@ -50,7 +52,7 @@ public class ResourceProducerTest {
 		{
 			final EntityTransaction transaction = em.getTransaction();
 			transaction.begin();
-			Assert.assertEquals(0, textMessages.listText().size());
+			assertEquals(0, textMessages.listText().size());
 			transaction.commit();
 		}
 		{
@@ -62,11 +64,11 @@ public class ResourceProducerTest {
 		{
 			final EntityTransaction transaction = em.getTransaction();
 			transaction.begin();
-			Assert.assertEquals(1, textMessages.listText().size());
+			assertEquals(1, textMessages.listText().size());
 			final TextMessage tm = (TextMessage) em.createQuery(
 					"select t from TextMessage t").getSingleResult();
-			Assert.assertEquals("hello", tm.getText());
-			Assert.assertNotNull(tm.getUuid());
+			assertEquals("hello", tm.getText());
+			assertNotNull(tm.getUuid());
 			transaction.commit();
 		}
 	}

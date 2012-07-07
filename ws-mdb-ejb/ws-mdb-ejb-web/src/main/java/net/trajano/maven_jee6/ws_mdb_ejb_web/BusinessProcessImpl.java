@@ -66,7 +66,7 @@ public class BusinessProcessImpl implements BusinessProcess {
 	 *            message producer
 	 */
 	@Inject
-	public void setMessageProducer(final @Work MessageProducer messageProducer) {
+	public void setMessageProducer(@Work final MessageProducer messageProducer) {
 		this.messageProducer = messageProducer;
 	}
 

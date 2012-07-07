@@ -1,5 +1,8 @@
 package net.trajano.maven_jee6.test.test;
 
+import static org.jboss.shrinkwrap.api.ShrinkWrap.create;
+import static org.junit.Assert.assertEquals;
+
 import javax.inject.Inject;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
@@ -15,10 +18,8 @@ import net.trajano.maven_jee6.test.LatchedMessageListener;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -43,8 +44,7 @@ public class LatchedMessageListenerTest {
 
 	@Deployment
 	public static JavaArchive createDeployment() {
-		return ShrinkWrap.create(JavaArchive.class)
-				.addClass(StringBuilderListener.class)
+		return create(JavaArchive.class).addClass(StringBuilderListener.class)
 				.addClass(FactoryProducers.class)
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
@@ -63,8 +63,7 @@ public class LatchedMessageListenerTest {
 		final StringBuilderListener listener = new StringBuilderListener();
 		final LatchedMessageListener latchedMessageListener = new LatchedMessageListener(
 				listener, connectionFactory, sampleQueue);
-		Assert.assertEquals(listener,
-				latchedMessageListener.getWrappedListener());
+		assertEquals(listener, latchedMessageListener.getWrappedListener());
 		consumer.setMessageListener(latchedMessageListener);
 
 		final MessageProducer producer = session.createProducer(sampleQueue);
@@ -74,6 +73,6 @@ public class LatchedMessageListenerTest {
 		session.commit();
 
 		latchedMessageListener.await();
-		Assert.assertEquals("ABC123do-re-mi", listener.getBuiltString());
+		assertEquals("ABC123do-re-mi", listener.getBuiltString());
 	}
 }

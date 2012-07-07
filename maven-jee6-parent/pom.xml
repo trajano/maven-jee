@@ -11,16 +11,15 @@
 		<!-- Without this, the dependency will try to connect to the remote repository 
 			all the time. -->
 		<dependency.locations.enabled>false</dependency.locations.enabled>
-		<!-- This will allow the build to continue even if there are unit test 
-			failures detected. Useful for tracking development progress. -->
-		<maven.test.failure.ignore>true</maven.test.failure.ignore>
 	</properties>
+	<prerequisites>
+		<maven>3.0.0</maven>
+	</prerequisites>
 	<dependencies>
 		<dependency>
-			<groupId>org.jboss.spec</groupId>
-			<artifactId>jboss-javaee-6.0</artifactId>
-			<version>1.0.0.Final</version>
-			<type>pom</type>
+			<groupId>javax</groupId>
+			<artifactId>javaee-api</artifactId>
+			<version>6.0</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -44,6 +43,14 @@
 		</dependencies>
 	</dependencyManagement>
 	<build>
+		<plugins>
+			<!-- Only define plugins that provide extensions on the parent POM. -->
+			<plugin>
+				<groupId>org.apache.felix</groupId>
+				<artifactId>maven-bundle-plugin</artifactId>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
 		<pluginManagement>
 			<plugins>
 				<plugin>
@@ -106,11 +113,7 @@
 								</configuration>
 							</plugin>
 							<plugin>
-								<!-- This section is repeated in order to allow M2E PMD connector 
-									to read the configuration correctly. -->
-								<groupId>org.apache.maven.plugins</groupId>
 								<artifactId>maven-pmd-plugin</artifactId>
-								<version>2.7.1</version>
 								<configuration>
 									<linkXref>true</linkXref>
 									<sourceEncoding>utf-8</sourceEncoding>
@@ -133,11 +136,8 @@
 								</configuration>
 							</plugin>
 							<plugin>
-								<!-- This section is repeated in order to allow M2E Checkstyle connector 
-									to read the configuration correctly. -->
 								<groupId>org.apache.maven.plugins</groupId>
 								<artifactId>maven-checkstyle-plugin</artifactId>
-								<version>2.9.1</version>
 								<configuration>
 									<linkXRef>true</linkXRef>
 									<configLocation>config/checks.xml</configLocation>
@@ -153,6 +153,12 @@
 							<version>${project.version}</version>
 							<artifactId>check-configuration</artifactId>
 						</dependency>
+						<dependency>
+							<groupId>org.jboss.spec</groupId>
+							<artifactId>jboss-javaee-6.0</artifactId>
+							<version>1.0.0.Final</version>
+							<type>pom</type>
+						</dependency>
 					</dependencies>
 				</plugin>
 				<plugin>
@@ -160,13 +166,24 @@
 					<version>1.7</version>
 				</plugin>
 				<plugin>
+					<artifactId>maven-checkstyle-plugin</artifactId>
+					<version>2.9.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>2.3.2</version>
+					<version>2.5.1</version>
 					<configuration>
-						<fork>true</fork>
 						<source>1.6</source>
 						<target>1.6</target>
 					</configuration>
+				</plugin>
+				<plugin>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.7</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-ear-plugin</artifactId>
@@ -183,10 +200,22 @@
 					</configuration>
 				</plugin>
 				<plugin>
+					<artifactId>maven-install-plugin</artifactId>
+					<version>2.3.1</version>
+				</plugin>
+				<plugin>
 					<!-- Use an older version of the plugin due to the following issue in 
 						2.4 https://github.com/sonatype/m2eclipse-extras/issues/10 -->
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>2.3.2</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-pmd-plugin</artifactId>
+					<version>2.7.1</version>
+				</plugin>
+				<plugin>
+					<artifactId>maven-resources-plugin</artifactId>
+					<version>2.5</version>
 				</plugin>
 				<plugin>
 					<artifactId>maven-surefire-plugin</artifactId>
@@ -196,6 +225,11 @@
 				<plugin>
 					<artifactId>maven-war-plugin</artifactId>
 					<version>2.2</version>
+				</plugin>
+				<plugin>
+					<groupId>org.apache.felix</groupId>
+					<artifactId>maven-bundle-plugin</artifactId>
+					<version>2.3.7</version>
 				</plugin>
 				<plugin>
 					<groupId>org.jvnet.jax-ws-commons</groupId>
