@@ -32,6 +32,11 @@
 			<version>1.13</version>
 		</dependency>
 		<dependency>
+			<groupId>de.flapdoodle.embedmongo</groupId>
+			<artifactId>de.flapdoodle.embedmongo</artifactId>
+			<version>1.16</version>
+		</dependency>
+		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-core</artifactId>
 			<version>5.6.0</version>
@@ -70,6 +75,11 @@
 			<groupId>org.jboss.weld.se</groupId>
 			<artifactId>weld-se-core</artifactId>
 			<version>1.1.8.Final</version>
+		</dependency>
+		<dependency>
+			<groupId>org.scalatest</groupId>
+			<artifactId>scalatest_2.9.2</artifactId>
+			<version>1.8</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
