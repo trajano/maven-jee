@@ -1,5 +1,9 @@
 package net.trajano.maven_jee6.ws_mdb_ejb_web.test;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
 import java.io.ByteArrayOutputStream;
 import java.io.StringWriter;
 import java.lang.annotation.Annotation;
@@ -18,7 +22,6 @@ import javax.xml.bind.Marshaller;
 
 import net.trajano.maven_jee6.ws_mdb_ejb_web.TextMessage;
 
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -47,7 +50,7 @@ public class XmlJsonBindingTest {
 	 */
 	@Test
 	public void testCreationOfObject() {
-		Assert.assertEquals("hello", textMessage.getText());
+		assertEquals("hello", textMessage.getText());
 	}
 
 	@Test
@@ -56,7 +59,7 @@ public class XmlJsonBindingTest {
 		final Marshaller m = jc.createMarshaller();
 		final StringWriter w = new StringWriter();
 		m.marshal(textMessage, w);
-		Assert.assertTrue(w.toString().contains("<text>hello</text>"));
+		assertTrue(w.toString().contains("<text>hello</text>"));
 	}
 
 	@Test
@@ -145,12 +148,12 @@ public class XmlJsonBindingTest {
 				.getMessageBodyWriter(TextMessage.class, TextMessage.class,
 						new Annotation[0], MediaType.APPLICATION_JSON_TYPE);
 		final ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		Assert.assertNotNull(messageBodyWriter);
+		assertNotNull(messageBodyWriter);
 
 		messageBodyWriter.writeTo(textMessage, TextMessage.class,
 				TextMessage.class, new Annotation[0],
 				MediaType.APPLICATION_JSON_TYPE, responseHeaders, baos);
 		final String jsonString = new String(baos.toByteArray());
-		Assert.assertTrue(jsonString.contains("\"text\":\"hello\""));
+		assertTrue(jsonString.contains("\"text\":\"hello\""));
 	}
 }

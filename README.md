@@ -25,6 +25,7 @@ development.
 * Hudson
 * Java language
 * Maven
+* OSGi support (to provide OSGi compatible bundles only)
 
 ## License objectives
 

@@ -1,7 +1,11 @@
 package net.trajano.maven_jee6.test.test;
 
+import static net.trajano.maven_jee6.test.UtilityClassTestUtil.assertUtilityClassWellDefined;
 import net.trajano.maven_jee6.test.FactoryProducersUtil;
 import net.trajano.maven_jee6.test.UtilityClassTestUtil;
+import net.trajano.maven_jee6.test.util.MultipleConstructorUtil;
+import net.trajano.maven_jee6.test.util.NonFinalUtil;
+import net.trajano.maven_jee6.test.util.PublicConstructorUtil;
 
 import org.junit.Test;
 
@@ -14,36 +18,31 @@ import org.junit.Test;
 public class UtilityClassTestUtilTest {
 	@Test(expected = AssertionError.class)
 	public void testBadUtil1() throws Exception {
-		UtilityClassTestUtil.assertUtilityClassWellDefined(NonFinalUtil.class);
+		assertUtilityClassWellDefined(NonFinalUtil.class);
 	}
 
 	@Test(expected = AssertionError.class)
 	public void testBadUtil2() throws Exception {
-		UtilityClassTestUtil
-				.assertUtilityClassWellDefined(PublicConstructorUtil.class);
+		assertUtilityClassWellDefined(PublicConstructorUtil.class);
 	}
 
 	@Test(expected = AssertionError.class)
 	public void testBadUtil3() throws Exception {
-		UtilityClassTestUtil
-				.assertUtilityClassWellDefined(MultipleConstructorUtil.class);
+		assertUtilityClassWellDefined(MultipleConstructorUtil.class);
 	}
 
 	@Test
 	public void testOtherUtil() throws Exception {
-		UtilityClassTestUtil
-				.assertUtilityClassWellDefined(FactoryProducersUtil.class);
+		assertUtilityClassWellDefined(FactoryProducersUtil.class);
 	}
 
 	@Test
 	public void testSelf() throws Exception {
-		UtilityClassTestUtil
-				.assertUtilityClassWellDefined(UtilityClassTestUtil.class);
+		assertUtilityClassWellDefined(UtilityClassTestUtil.class);
 	}
 
 	@Test(expected = AssertionError.class)
 	public void testTestSelf() throws Exception {
-		UtilityClassTestUtil
-				.assertUtilityClassWellDefined(UtilityClassTestUtilTest.class);
+		assertUtilityClassWellDefined(UtilityClassTestUtilTest.class);
 	}
 }

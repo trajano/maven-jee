@@ -1,11 +1,12 @@
 package net.trajano.maven_jee6.test;
 
+import static org.junit.Assert.assertNotNull;
+
 import javax.xml.namespace.QName;
 
 import net.trajano.maven_jee6.BusinessProcessService;
 import net.trajano.schemas._2013.ObjectFactory;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -17,7 +18,7 @@ public class WebServiceClientCreationTest {
 	@Test
 	public void testCreatedClient() {
 		final BusinessProcessService service = new BusinessProcessService();
-		Assert.assertNotNull(service.getBusinessProcess());
+		assertNotNull(service.getBusinessProcess());
 	}
 
 	@Test
@@ -27,7 +28,7 @@ public class WebServiceClientCreationTest {
 						.getResource("META-INF/wsdl/ws-mdb-ejb.wsdl"),
 				new QName("http://maven-jee6.trajano.net/",
 						"BusinessProcessService"));
-		Assert.assertNotNull(service.getBusinessProcess());
+		assertNotNull(service.getBusinessProcess());
 	}
 
 	@Test

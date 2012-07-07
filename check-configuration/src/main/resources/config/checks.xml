@@ -104,6 +104,18 @@
       <property name="ignoreComments" value="true"/>
     </module>
     <module name="RegexpSinglelineJava">
+      <metadata name="net.sf.eclipsecs.core.comment" value="Explicit Assert class."/>
+      <property name="format" value="[^.]Assert\."/>
+      <property name="message" value="Explicit Assert class."/>
+      <property name="ignoreComments" value="true"/>
+    </module>
+    <module name="RegexpSinglelineJava">
+      <metadata name="net.sf.eclipsecs.core.comment" value="Explicit EasyMock class."/>
+      <property name="format" value="[^.]EasyMock\."/>
+      <property name="message" value="Explicit EasyMock class."/>
+      <property name="ignoreComments" value="true"/>
+    </module>
+    <module name="RegexpSinglelineJava">
       <metadata name="net.sf.eclipsecs.core.comment" value="Using System.out"/>
       <property name="format" value="System\.out\b"/>
       <property name="message" value="Using System.out"/>
