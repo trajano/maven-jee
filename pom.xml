@@ -17,6 +17,9 @@
 		<module>maven-jee6-parent</module>
 		<module>maven-jee6-test</module>
 		<module>ws-mdb-ejb</module>
+		<module>behavior-driven-testing</module>
+		<module>osgi-sample</module>
+		<module>nosql</module>
 	</modules>
 	<distributionManagement>
 		<site>
