@@ -10,6 +10,7 @@
 	</parent>
 	<artifactId>maven-jee6-test</artifactId>
 	<packaging>bundle</packaging>
+	<name>Unit Test Dependencies</name>
 	<description>This unifies all the test dependencies into one project that can be imported transitively. It provides
 		all the necessary reference implementations so things can be run in a JavaSE environment. It also provides some
 		unit testing utilities.
@@ -23,12 +24,12 @@
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-json</artifactId>
-			<version>1.12</version>
+			<version>1.13</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
 			<artifactId>jersey-client</artifactId>
-			<version>1.12</version>
+			<version>1.13</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
@@ -38,7 +39,7 @@
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
-			<version>10.8.2.2</version>
+			<version>10.9.1.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
@@ -48,7 +49,7 @@
 		<dependency>
 			<groupId>org.hibernate</groupId>
 			<artifactId>hibernate-entitymanager</artifactId>
-			<version>4.1.3.Final</version>
+			<version>4.1.4.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.hibernate</groupId>
@@ -58,18 +59,12 @@
 		<dependency>
 			<groupId>org.jboss.arquillian.junit</groupId>
 			<artifactId>arquillian-junit-container</artifactId>
-			<version>1.0.0.Final</version>
+			<version>1.0.1.Final</version>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.arquillian.container</groupId>
 			<artifactId>arquillian-weld-ee-embedded-1.1</artifactId>
 			<version>1.0.0.CR3</version>
-		</dependency>
-		<dependency>
-			<groupId>org.jboss.spec</groupId>
-			<artifactId>jboss-javaee-6.0</artifactId>
-			<version>1.0.0.Final</version>
-			<type>pom</type>
 		</dependency>
 		<dependency>
 			<groupId>org.jboss.weld.se</groupId>
@@ -79,7 +74,7 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-nop</artifactId>
-			<version>1.6.4</version>
+			<version>1.6.6</version>
 		</dependency>
 	</dependencies>
 </project>
