@@ -32,6 +32,11 @@
 			<artifactId>org.apache.servicemix.bundles.aopalliance</artifactId>
 			<version>1.0_6</version>
 		</dependency>
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>3.1.2.RELEASE</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<plugins>

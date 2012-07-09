@@ -4,10 +4,10 @@
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd"
 	default-activation="lazy">
 	<bean id="Hazelcast" class="com.hazelcast.core.Hazelcast"
-		factory-method="getDefaultIntance" destroy-method="shutdownAll"></bean>
-	<bean id="ClusteredExecutor" factory-ref="HazelCast"
+		factory-method="getDefaultInstance" destroy-method="shutdownAll" />
+	<bean id="ClusteredExecutor" factory-ref="Hazelcast"
 		factory-method="getExecutorService" />
-	<bean id="ClusteredQueue" factory-ref="HazelCast" factory-method="getQueue">
+	<bean id="ClusteredQueue" factory-ref="Hazelcast" factory-method="getQueue">
 		<argument value="SampleQueue" />
 	</bean>
 	<bean id="MongoDbFactory"
