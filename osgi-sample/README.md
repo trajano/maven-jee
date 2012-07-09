@@ -14,3 +14,4 @@ existing Maven project structures.
 IntelliJ and Eclipse are targetted as IDEs to use this.
 
 Install verification tests uses Apache Karaf as the OSGi test container.
+However, JUnit tests use PaxExam.
