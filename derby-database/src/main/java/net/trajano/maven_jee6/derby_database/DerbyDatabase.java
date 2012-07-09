@@ -2,6 +2,7 @@ package net.trajano.maven_jee6.derby_database;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -57,14 +58,15 @@ public class DerbyDatabase {
 		}
 		networkServerControlImpl = new NetworkServerControlImpl(
 				InetAddress.getLocalHost(), port);
-		networkServerControlImpl.start(new PrintWriter(new OutputStream() {
-			/**
-			 * Does nothing. {@inheritDoc}
-			 */
-			@Override
-			public void write(final int c) throws IOException {
-			}
-		}));
+		networkServerControlImpl.start(new PrintWriter(new OutputStreamWriter(
+				new OutputStream() {
+					/**
+					 * Does nothing. {@inheritDoc}
+					 */
+					@Override
+					public void write(final int c) throws IOException {
+					}
+				}, "utf8")));
 		for (int i = 0; i < 5 && !networkServerControlImpl.isServerStarted(); ++i) {
 			Thread.sleep(500);
 		}

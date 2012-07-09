@@ -11,7 +11,15 @@
     <module name="JavadocType"/>
     <module name="JavadocVariable"/>
     <module name="JavadocStyle"/>
-    <module name="ConstantName"/>
+    <module name="ConstantName">
+        <property name="applyToPrivate" value="false"/>
+    </module>
+    <module name="ConstantName">
+        <property name="applyToPublic" value="false"/>
+        <property name="applyToProtected" value="false"/>
+        <property name="applyToPackage" value="false"/>
+        <property name="format" value="^([A-Z][A-Z0-9]*(_[A-Z0-9]+)*|log)$"/>
+    </module>
     <module name="LocalFinalVariableName"/>
     <module name="LocalVariableName"/>
     <module name="MemberName"/>
