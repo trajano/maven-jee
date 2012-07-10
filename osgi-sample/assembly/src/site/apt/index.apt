@@ -1,0 +1,25 @@
+	------------------------
+	OSGi Example Assembly
+	------------------------
+	Archimedes Trajano
+	------------------------
+
+About OSGi Example Assembly
+
+	This project provides an OSGi bundle repository that contains all the dependencies
+	used by the application.
+	
+	It also provides JUnit tests using Pax Exam.
+
+	By design, it avoids any Karaf dependencies.
+	
+	This project must be built from the command line.
+	
+	At the moment since the target platform is Karaf, the OSGi level is 4.2 as such the
+	generic methods are not available.  However, this is circumvented by using
+	Pax Exam Swissbox utility classes.
+
+Deployment instructions
+
+	To deploy to a framework, unzip the distribution archive and add the location to the
+	OBR URL list of the OSGi server you are using.
