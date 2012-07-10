@@ -8,15 +8,11 @@ import static org.ops4j.pax.exam.CoreOptions.frameworkProperty;
 import static org.ops4j.pax.exam.CoreOptions.junitBundles;
 import static org.ops4j.pax.exam.CoreOptions.options;
 import static org.ops4j.pax.exam.CoreOptions.systemProperty;
+import static org.ops4j.pax.swissbox.framework.ServiceLookup.getService;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Set;
 import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Executor;
-import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
@@ -29,9 +25,7 @@ import org.ops4j.pax.exam.Option;
 import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.ServiceReference;
-import org.osgi.service.blueprint.container.BlueprintEvent;
-import org.osgi.service.blueprint.container.BlueprintListener;
+import org.osgi.service.blueprint.container.BlueprintContainer;
 import org.osgi.service.obr.RepositoryAdmin;
 import org.osgi.service.obr.Resolver;
 import org.osgi.service.obr.Resource;
@@ -64,16 +58,21 @@ public class PaxTest {
 				systemProperty("org.ops4j.pax.logging.DefaultServiceLog.level")
 						.value("WARN"),
 				frameworkProperty("obr.repository.url").value(
-						new File("../obr/target/dependency/repository.xml")
-								.toURI().toASCIIString()),
-				bundle("mvn:org.ops4j.pax.url/pax-url-commons/1.4.2"),
-				bundle("mvn:org.ops4j.pax.url/pax-url-obr/1.4.2"),
-				bundle("mvn:org.ops4j.pax.swissbox/pax-swissbox-property"),
-				bundle("mvn:org.ops4j.pax.swissbox/pax-swissbox-tracker"),
+						new File("target/dependency/repository.xml").toURI()
+								.toASCIIString()),
 				bundle("mvn:org.apache.felix/org.osgi.service.obr/1.0.2"),
 				bundle("mvn:org.apache.felix/org.apache.felix.bundlerepository/1.6.6"),
+				bundle("mvn:org.apache.aries/org.apache.aries.util/0.4"),
+				bundle("mvn:org.apache.aries.blueprint/org.apache.aries.blueprint.core/0.4"),
+				bundle("mvn:org.apache.aries.proxy/org.apache.aries.proxy/0.4"),
 				junitBundles());
 	}
+
+	/**
+	 * Injected blueprint container.
+	 */
+	@Inject
+	private BlueprintContainer blueprintContainer;
 
 	/**
 	 * Injected bundle context.
@@ -88,54 +87,35 @@ public class PaxTest {
 	private RepositoryAdmin repositoryAdmin;
 
 	/**
-	 * Deploy OBR resources to Blueprint Container.
+	 * Deploy OBR resources.
 	 * 
 	 * @param filter
 	 *            filter.
 	 * @throws Exception
 	 */
-	private void deployBlueprint(final String filter) throws Exception {
+	private void obrDeploy(final String filter) throws Exception {
 		final Resolver resolver = repositoryAdmin.resolver();
 		final Resource[] discoverResources = repositoryAdmin
 				.discoverResources(filter);
-		assertTrue(discoverResources.length > 0);
-		resolver.add(discoverResources[0]);
+		for (final Resource r : discoverResources) {
+			resolver.add(r);
+		}
 		assertTrue(resolver.resolve());
 		resolver.deploy(true);
-		final Set<String> resourceSet = new HashSet<String>();
-		for (final Resource resource : resolver.getAddedResources()) {
-			resourceSet.add(resource.getSymbolicName() + resource.getVersion());
-		}
-		for (final Resource resource : discoverResources) {
-			resourceSet.add(resource.getSymbolicName() + resource.getVersion());
-		}
-		final CountDownLatch latch = new CountDownLatch(resourceSet.size());
-		bundleContext.registerService(BlueprintListener.class,
-				new BlueprintListener() {
-					@Override
-					public void blueprintEvent(final BlueprintEvent event) {
-						if (event.getType() == BlueprintEvent.CREATED) {
-							resourceSet.remove(event.getBundle()
-									.getSymbolicName()
-									+ event.getBundle().getVersion());
-							latch.countDown();
-						}
-					}
-				}, new Hashtable<String, Object>());
-		latch.await(5, TimeUnit.SECONDS);
-		assertEquals("some resources didn't start " + resourceSet, 0,
-				latch.getCount());
 	}
 
+	/**
+	 * Tests the Blueprint producer bundle by checking if the services it
+	 * exposes are available.
+	 * 
+	 * @throws Exception
+	 */
 	@Test
 	public void testBlueprintBundle() throws Exception {
-		deployBlueprint("(symbolicname=net.trajano.maven-jee6.blueprint.producer)");
-		assertNotNull(bundleContext.getServiceReference(MongoDbFactory.class
-				.getName()));
-		assertNotNull(bundleContext.getServiceReference(BlockingQueue.class
-				.getName()));
-		assertNotNull(bundleContext.getServiceReference(Executor.class
-				.getName()));
+		obrDeploy("(symbolicname=net.trajano.maven-jee6.blueprint.producer)");
+		getService(bundleContext, MongoDbFactory.class);
+		getService(bundleContext, BlockingQueue.class);
+		getService(bundleContext, Executor.class);
 	}
 
 	/**
@@ -143,25 +123,12 @@ public class PaxTest {
 	 */
 	@Test
 	public void testBlueprintUserBundle() throws Exception {
-		deployBlueprint("(symbolicname=net.trajano.maven-jee6.*)");
-		deployBlueprint("(symbolicname=net.trajano.maven-jee6.blueprint.consumer)");
+		obrDeploy("(|(symbolicname=*.blueprint.consumer)(symbolicname=*.blueprint.producer)(symbolicname=*.hello.osgi))");
 
-		final ServiceReference<IServiceUser> serviceReference = bundleContext
-				.getServiceReference(IServiceUser.class);
-		assertNotNull("unable to locate service reference for "
-				+ IServiceUser.class, serviceReference);
-		final IServiceUser bean = bundleContext.getService(serviceReference);
+		final IServiceUser bean = getService(bundleContext, IServiceUser.class);
+
 		assertNotNull(bean);
 		assertEquals("olleh", bean.reverse("hello"));
-	}
-
-	/**
-	 * This tests the {@link IHello#echo(String)} service call.
-	 */
-	@Test
-	public void testFramework() throws Exception {
-		assertNotNull(bundleContext
-				.getServiceReference("org.osgi.service.obr.RepositoryAdmin"));
 	}
 
 	/**
@@ -172,18 +139,16 @@ public class PaxTest {
 	 */
 	@Test
 	public void testHazelcastQueue() throws Exception {
-		deployBlueprint("(symbolicname=net.trajano.maven-jee6.*)");
+		obrDeploy("(|(symbolicname=*.blueprint.consumer)(symbolicname=*.blueprint.producer)(symbolicname=*.hello.osgi))");
 		{
 			@SuppressWarnings("unchecked")
-			final BlockingQueue<String> queue = (BlockingQueue<String>) bundleContext
-					.getService(bundleContext
-							.getServiceReference(BlockingQueue.class.getName()));
+			final BlockingQueue<String> queue = getService(bundleContext,
+					BlockingQueue.class);
 			queue.put("hello");
 		}
 		{
-			final IServiceUser serviceUser = (IServiceUser) bundleContext
-					.getService(bundleContext
-							.getServiceReference(IServiceUser.class.getName()));
+			final IServiceUser serviceUser = getService(bundleContext,
+					IServiceUser.class);
 			assertEquals("hello", serviceUser.pop());
 		}
 	}
@@ -197,19 +162,18 @@ public class PaxTest {
 	public void testHelloBundle() throws Exception {
 		bundleContext.installBundle("obr:net.trajano.maven-jee6.hello.osgi")
 				.start();
-		final ServiceReference<IHello> serviceReference = bundleContext
-				.getServiceReference(IHello.class);
-		assertNotNull(serviceReference);
-		final IHello hello = bundleContext.getService(serviceReference);
+		final IHello hello = getService(bundleContext, IHello.class);
 		assertNotNull(hello);
 		assertEquals("hello", hello.echo("hello"));
 	}
 
 	/**
-	 * Tests to make sure the {@link JUnit4TestRunner} is configured correctly.
+	 * Tests to make sure the {@link JUnit4TestRunner} is configured correctly
+	 * and all the framework services are in place.
 	 */
 	@Test
 	public void testInjectedObjects() {
+		assertNotNull(blueprintContainer);
 		assertNotNull(bundleContext);
 		assertNotNull(repositoryAdmin);
 	}
