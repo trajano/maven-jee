@@ -12,18 +12,17 @@
 	<artifactId>osgi-sample</artifactId>
 	<packaging>pom</packaging>
 	<modules>
+		<module>assembly</module>
 		<module>blueprint.consumer</module>
 		<module>blueprint.producer</module>
 		<module>hello.osgi</module>
-		<module>obr</module>
-		<module>osgi.tests</module>
 	</modules>
 	<dependencies>
 		<dependency>
 			<groupId>org.osgi</groupId>
 			<artifactId>org.osgi.core</artifactId>
 			<version>4.2.0</version>
-			<!-- although 5.0.0 is released, the current test tooling does not work 
+			<!-- although 5.0.0 is released, the current test tooling does not work
 				with that version -->
 		</dependency>
 		<dependency>
