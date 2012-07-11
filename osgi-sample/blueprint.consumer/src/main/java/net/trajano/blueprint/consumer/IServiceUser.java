@@ -7,6 +7,13 @@ package net.trajano.blueprint.consumer;
  */
 public interface IServiceUser {
 	/**
+	 * Returns the currently configured value.
+	 * 
+	 * @return configured value.
+	 */
+	String getConfiguredValue();
+
+	/**
 	 * Pops a string from the blocking queue.
 	 * 
 	 * @return the string at the top of the blocking queue.
