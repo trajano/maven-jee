@@ -2,9 +2,8 @@
 <blueprint xmlns="http://www.osgi.org/xmlns/blueprint/v1.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.osgi.org/xmlns/blueprint/v1.0.0 http://www.osgi.org/xmlns/blueprint/v1.0.0/blueprint.xsd"
-	default-activation="lazy">
-	<bean id="ServiceUserBean" class="net.trajano.blueprint.consumer.internal.ServiceUserBean"
-		scope="singleton">
+	default-activation="eager">
+	<bean id="ServiceUserBean" class="net.trajano.blueprint.consumer.internal.ServiceUserBean">
 		<argument>
 			<reference interface="java.util.concurrent.Executor" />
 		</argument>
@@ -18,6 +17,13 @@
 			<reference interface="java.util.concurrent.BlockingQueue" />
 		</argument>
 	</bean>
-	<service ref="ServiceUserBean" interface="net.trajano.blueprint.consumer.IServiceUser"
-		activation="eager" />
+	<service ref="ServiceUserBean">
+		<interfaces>
+			<value>net.trajano.blueprint.consumer.IServiceUser</value>
+			<value>org.osgi.service.cm.ManagedService</value>
+		</interfaces>
+		<service-properties>
+			<entry key="service.pid" value="net.trajano.blueprint.consumer" />
+		</service-properties>
+	</service>
 </blueprint>

@@ -1,5 +1,6 @@
 package net.trajano.blueprint.consumer.internal;
 
+import java.util.Dictionary;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 import java.util.logging.Logger;
@@ -10,6 +11,8 @@ import net.trajano.hello.osgi.IHello;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedService;
 import org.springframework.data.mongodb.MongoDbFactory;
 
 /**
@@ -17,12 +20,17 @@ import org.springframework.data.mongodb.MongoDbFactory;
  * 
  * @author Archimedes Trajano
  */
-public class ServiceUserBean implements IServiceUser {
+public class ServiceUserBean implements IServiceUser, ManagedService {
 	/**
 	 * Logger.
 	 */
 	private static final Logger log = Logger.getLogger(ServiceUserBean.class
 			.getName());
+
+	/**
+	 * Configured value.
+	 */
+	private String configuredValue;
 
 	/**
 	 * Injected executor.
@@ -72,6 +80,14 @@ public class ServiceUserBean implements IServiceUser {
 	 * {@inheritDoc}
 	 */
 	@Override
+	public synchronized String getConfiguredValue() {
+		return configuredValue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public String pop() {
 		return queue.remove();
 	}
@@ -96,6 +112,19 @@ public class ServiceUserBean implements IServiceUser {
 		return new ToStringBuilder(this, ToStringStyle.MULTI_LINE_STYLE)
 				.append("executor", executor).append("hello", hello)
 				.append("mongoDbFactory", mongoDbFactory)
-				.append("queue", queue).toString();
+				.append("queue", queue)
+				.append("configuredValue", configuredValue).toString();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public void updated(
+			@SuppressWarnings("rawtypes") final Dictionary properties)
+			throws ConfigurationException {
+		if (properties != null) {
+			configuredValue = (String) properties.get("configuredvalue");
+		}
 	}
 }
