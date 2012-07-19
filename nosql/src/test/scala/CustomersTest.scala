@@ -5,6 +5,7 @@ import de.flapdoodle.embedmongo.runtime.Network
 import de.flapdoodle.embedmongo.MongoDBRuntime
 import java.util.{UUID, Date}
 import net.trajano.nosql.{Customers, Customer}
+import net.trajano.nosql.internal.MongoDbCustomers
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.junit.JUnitRunner
@@ -25,7 +26,7 @@ class CustomersTest extends FunSpec with ShouldMatchers {
       val mongoProcess = mongodExecutable.start()
       val mongo = new Mongo("localhost", 12345)
       val db = mongo.getDB(UUID.randomUUID().toString)
-      val customers = new Customers(db)
+      val customers = new MongoDbCustomers(db)
 
 
       val customer = new Customer

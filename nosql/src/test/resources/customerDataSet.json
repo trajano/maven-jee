@@ -1,0 +1,56 @@
+{
+    "name" : "otherKeyspaceName",
+    "replicationFactor" : 1,
+    "strategy" : "org.apache.cassandra.locator.SimpleStrategy",
+    "columnFamilies" : [
+    {
+        "name" : "customer",
+        "type" : "STANDARD",
+        "keyType" : "UUIDType",
+        "comparatorType" : "UTF8Type",
+        "defaultColumnValueType" : "UTF8Type",
+        "columnsMetadata" : [{
+            "name" : "uuid",
+            "validationClass" : "UUIDType"
+        },
+        {
+            "name" : "name",
+            "validationClass" : "UTF8Type",
+            "indexType" : "KEYS"
+        },
+        {
+            "name" : "lastRecallTimestamp",
+            "validationClass" : "LongType",
+            "indexType" : "KEYS"
+        }],
+        "rows" : [{
+            "key" : "13816710-1dd2-11b2-879a-782bcb80ff6a",
+            "columns" : [{
+                "name" : "uuid",
+                "value" : "uuid(13816710-1dd2-11b2-879a-782bcb80ff6a)"
+            },
+            {
+                "name" : "name",
+                "value" : "Archie"
+            }]
+        }]
+    },
+    {
+        "name" : "customerName",
+        "type" : "STANDARD",
+        "keyType" : "UTF8Type",
+        "comparatorType" : "UTF8Type",
+        "columnsMetadata" : [{
+            "name" : "uuid",
+            "validationClass" : "UUIDType"
+        }],
+        "rows" : [{
+            "key" : "archie",
+            "columns" : [{
+                "name" : "uuid",
+                "value" : "uuid(13816710-1dd2-11b2-879a-782bcb80ff6a)"
+            }]
+        }]
+    }
+    ]
+}
