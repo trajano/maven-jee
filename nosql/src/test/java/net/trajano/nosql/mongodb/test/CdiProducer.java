@@ -1,4 +1,4 @@
-package net.trajano.nosql.test;
+package net.trajano.nosql.mongodb.test;
 
 import java.io.IOException;
 import java.net.ServerSocket;
@@ -22,7 +22,7 @@ import de.flapdoodle.embedmongo.runtime.Network;
  * Created with IntelliJ IDEA. User: trajano Date: 12-05-28 Time: 11:05 PM To
  * change this template use File | Settings | File Templates.
  */
-public class TestMongoDbProducer {
+public class CdiProducer {
 	@Produces
 	@Singleton
 	public Mongo createMongo(final MongodProcess process,
@@ -47,7 +47,7 @@ public class TestMongoDbProducer {
 	public MongodExecutable createMongodExecutable(@EmbeddedMongo final int port)
 			throws IOException {
 		final MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
-		return runtime.prepare(new MongodConfig(Version.V2_1_1, port, Network
+		return runtime.prepare(new MongodConfig(Version.V2_0_5, port, Network
 				.localhostIsIPv6()));
 	}
 

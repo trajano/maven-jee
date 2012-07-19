@@ -1,4 +1,4 @@
-package net.trajano.nosql.test;
+package net.trajano.nosql.mongodb.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

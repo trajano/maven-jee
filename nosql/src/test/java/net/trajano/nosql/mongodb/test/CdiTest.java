@@ -1,4 +1,4 @@
-package net.trajano.nosql.test;
+package net.trajano.nosql.mongodb.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -12,6 +12,7 @@ import javax.inject.Inject;
 
 import net.trajano.nosql.Customer;
 import net.trajano.nosql.Customers;
+import net.trajano.nosql.internal.MongoDbCustomers;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -31,8 +32,8 @@ import com.mongodb.util.JSON;
 public class CdiTest {
 	@Deployment
 	public static JavaArchive createDeployment() {
-		return ShrinkWrap.create(JavaArchive.class)
-				.addClass(TestMongoDbProducer.class).addClass(Customers.class)
+		return ShrinkWrap.create(JavaArchive.class).addClass(CdiProducer.class)
+				.addClass(Customers.class).addClass(MongoDbCustomers.class)
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
 	}
 
