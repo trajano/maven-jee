@@ -1,5 +1,6 @@
 package net.trajano.nosql.internal;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -11,7 +12,11 @@ import me.prettyprint.cassandra.serializers.UUIDSerializer;
 import me.prettyprint.cassandra.service.template.ColumnFamilyResult;
 import me.prettyprint.cassandra.service.template.ColumnFamilyTemplate;
 import me.prettyprint.cassandra.service.template.ColumnFamilyUpdater;
+import me.prettyprint.cassandra.service.template.SuperCfResult;
+import me.prettyprint.cassandra.service.template.SuperCfTemplate;
+import me.prettyprint.cassandra.service.template.SuperCfUpdater;
 import me.prettyprint.cassandra.service.template.ThriftColumnFamilyTemplate;
+import me.prettyprint.cassandra.service.template.ThriftSuperCfTemplate;
 import me.prettyprint.hector.api.Keyspace;
 import net.trajano.nosql.Customer;
 import net.trajano.nosql.Customers;
@@ -23,9 +28,11 @@ public class CassandraCustomers implements Customers {
 
 	/**
 	 * "CustomerNames" {@link ColumnFamilyTemplate} from the injected
-	 * {@link Keyspace}. The key is actually stored in lowercase.
+	 * {@link Keyspace}. The key is actually stored in lowercase. This column
+	 * family contains all the possible starts-with permutations for a given
+	 * name.
 	 */
-	private final ColumnFamilyTemplate<String, String> customerNameTemplate;
+	private final SuperCfTemplate<String, String, String> customerNameTemplate;
 
 	/**
 	 * "Customers" {@link ColumnFamilyTemplate} from the injected
@@ -44,9 +51,9 @@ public class CassandraCustomers implements Customers {
 		customerTemplate = new ThriftColumnFamilyTemplate<UUID, String>(
 				keyspace, "customer", UUIDSerializer.get(),
 				StringSerializer.get());
-		customerNameTemplate = new ThriftColumnFamilyTemplate<String, String>(
+		customerNameTemplate = new ThriftSuperCfTemplate<String, String, String>(
 				keyspace, "customerName", StringSerializer.get(),
-				StringSerializer.get());
+				StringSerializer.get(), StringSerializer.get());
 	}
 
 	/**
@@ -71,16 +78,19 @@ public class CassandraCustomers implements Customers {
 				customer.getLastRecallTimestamp());
 		customerTemplate.update(updater);
 
-		final ColumnFamilyUpdater<String, String> customerNameUpdater = customerNameTemplate
-				.createUpdater(customer.getName().toLowerCase());
-		customerNameUpdater.setUUID("uuid", uuid);
-		customerNameTemplate.update(customerNameUpdater);
+		for (int i = 1; i < customer.getName().length() + 1; ++i) {
+			final String key = customer.getName().substring(0, i).toLowerCase();
+			final SuperCfUpdater<String, String, String> customerNameUpdater = customerNameTemplate
+					.createUpdater(key, customer.getName());
+			customerNameUpdater.setUUID("uuid", uuid);
+			customerNameTemplate.update(customerNameUpdater);
+		}
 	}
 
 	/**
-	 * This will query using exact name match. Unfortunately there's no rich
-	 * query capability with Cassandra to allow regular expression or even
-	 * substrings. However, the search is case insensitive.
+	 * This will query using case-insensitive starts-with match. Unfortunately
+	 * there's no rich query capability with Cassandra to allow regular
+	 * expression or even substrings.
 	 * 
 	 * @param query
 	 *            key
@@ -88,16 +98,20 @@ public class CassandraCustomers implements Customers {
 	 */
 	@Override
 	public List<Customer> find(final String query) {
-		final UUID uuid;
-		final ColumnFamilyResult<String, String> queryColumns = customerNameTemplate
-				.queryColumns(query.toLowerCase());
+		final SuperCfResult<String, String, String> queryColumns = customerNameTemplate
+				.querySuperColumns(query.toLowerCase());
 		if (queryColumns == null) {
-			uuid = null;
-		} else {
-			uuid = queryColumns.getUUID("uuid");
+			return Collections.emptyList();
 		}
 
-		if (uuid != null) {
+		final List<Customer> ret = new ArrayList<Customer>();
+		for (final String columnName : queryColumns.getSuperColumns()) {
+			final UUID uuid = queryColumns.getUUID(columnName, "uuid");
+			if (uuid == null) {
+				System.out.println(String.format("null uuid at [%s][%s]",
+						query, columnName));
+				continue;
+			}
 			final ColumnFamilyResult<UUID, String> columns = customerTemplate
 					.queryColumns(uuid);
 			final Customer customer = new Customer();
@@ -105,9 +119,8 @@ public class CassandraCustomers implements Customers {
 			customer.setName(columns.getString("name"));
 			customer.setLastRecallTimestamp(columns
 					.getDate("lastRecallTimestamp"));
-			return Collections.singletonList(customer);
-		} else {
-			return Collections.emptyList();
+			ret.add(customer);
 		}
+		return ret;
 	}
 }
