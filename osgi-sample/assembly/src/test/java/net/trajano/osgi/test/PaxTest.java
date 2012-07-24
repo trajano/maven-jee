@@ -2,6 +2,7 @@ package net.trajano.osgi.test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.ops4j.pax.exam.CoreOptions.bundle;
 import static org.ops4j.pax.exam.CoreOptions.frameworkProperty;
@@ -11,6 +12,8 @@ import static org.ops4j.pax.exam.CoreOptions.systemProperty;
 import static org.ops4j.pax.swissbox.framework.ServiceLookup.getService;
 
 import java.io.File;
+import java.util.Dictionary;
+import java.util.Hashtable;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
@@ -26,6 +29,7 @@ import org.ops4j.pax.exam.junit.Configuration;
 import org.ops4j.pax.exam.junit.JUnit4TestRunner;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.blueprint.container.BlueprintContainer;
+import org.osgi.service.cm.ConfigurationAdmin;
 import org.osgi.service.obr.RepositoryAdmin;
 import org.osgi.service.obr.Resolver;
 import org.osgi.service.obr.Resource;
@@ -62,6 +66,7 @@ public class PaxTest {
 								.toASCIIString()),
 				bundle("mvn:org.apache.felix/org.osgi.service.obr/1.0.2"),
 				bundle("mvn:org.apache.felix/org.apache.felix.bundlerepository/1.6.6"),
+				bundle("mvn:org.apache.felix/org.apache.felix.configadmin/1.4.0"),
 				bundle("mvn:org.apache.aries/org.apache.aries.util/0.4"),
 				bundle("mvn:org.apache.aries.blueprint/org.apache.aries.blueprint.core/0.4"),
 				bundle("mvn:org.apache.aries.proxy/org.apache.aries.proxy/0.4"),
@@ -79,6 +84,12 @@ public class PaxTest {
 	 */
 	@Inject
 	private BundleContext bundleContext;
+
+	/**
+	 * Configuration administrator.
+	 */
+	@Inject
+	private ConfigurationAdmin configurationAdmin;
 
 	/**
 	 * Injected OBR repository administrator.
@@ -132,6 +143,28 @@ public class PaxTest {
 	}
 
 	/**
+	 * This tests the configuration administrator facility.
+	 */
+	@Test
+	public void testConfigurationAdmin() throws Exception {
+		obrDeploy("(|(symbolicname=*.blueprint.consumer)(symbolicname=*.blueprint.producer)(symbolicname=*.hello.osgi))");
+
+		final IServiceUser bean = getService(bundleContext, IServiceUser.class);
+		assertNotNull(bean);
+		assertNull(bean.getConfiguredValue());
+
+		final org.osgi.service.cm.Configuration configuration = configurationAdmin
+				.getConfiguration("net.trajano.blueprint.consumer", null);
+		assertNotNull(configuration);
+		assertNull(configuration.getProperties());
+		final Dictionary<String, String> properties = new Hashtable<String, String>();
+		properties.put("configuredvalue", "new configured value");
+		configuration.update(properties);
+		Thread.sleep(1500);
+		assertEquals("new configured value", bean.getConfiguredValue());
+	}
+
+	/**
 	 * Puts the data directly into the hazelcast queue and pops it out using the
 	 * service.
 	 * 
@@ -175,6 +208,7 @@ public class PaxTest {
 	public void testInjectedObjects() {
 		assertNotNull(blueprintContainer);
 		assertNotNull(bundleContext);
+		assertNotNull(configurationAdmin);
 		assertNotNull(repositoryAdmin);
 	}
 }
