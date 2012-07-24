@@ -39,11 +39,11 @@
             "key" : "13816710-1dd2-11b2-879a-782bcb80ff6a",
             "columns" : [{
                 "name" : "uuid",
-                "value" : "13816710-1dd2-11b2-879a-782bcb80ff6a"
+                "value" : "uuid(13816710-1dd2-11b2-879a-782bcb80ff6a)"
             },
             {
                 "name" : "name",
-                "value" : "Archie"
+                "value" : "utf8(Archie)"
             }]
         }]
     },
