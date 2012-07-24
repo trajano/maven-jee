@@ -63,5 +63,83 @@ public class CustomerTest extends AbstractCassandraUnit4TestCase {
 			assertEquals(1, customerList.size());
 			assertEquals("Archimedes Trajano", customerList.get(0).getName());
 		}
+		{
+			final List<Customer> customerList = customers.find("archimedes");
+			assertEquals(1, customerList.size());
+			assertEquals("Archimedes Trajano", customerList.get(0).getName());
+		}
+		{
+			final List<Customer> customerList = customers.find("archie");
+			assertEquals(1, customerList.size());
+			assertEquals("Archie", customerList.get(0).getName());
+		}
+		{
+			final List<Customer> customerList = customers.find("archi");
+			assertEquals(2, customerList.size());
+		}
+	}
+
+	@Test
+	public void testExistingDataSearch() {
+		{
+			final List<Customer> customerList = customers.find("archie");
+			assertEquals(1, customerList.size());
+			assertEquals("Archie", customerList.get(0).getName());
+		}
+	}
+
+	@Test
+	public void testMultipleInserts() {
+		{
+			final Customer customer = new Customer();
+			customer.setName("Excel");
+			customer.setLastRecallTimestamp(new Date());
+			customer.setUuid(UUID.randomUUID());
+
+			customers.add(customer);
+		}
+		{
+			final Customer customer = new Customer();
+			customer.setName("Hyatt");
+			customer.setLastRecallTimestamp(new Date());
+			customer.setUuid(UUID.randomUUID());
+
+			customers.add(customer);
+		}
+		{
+			final Customer customer = new Customer();
+			customer.setName("Hayate");
+			customer.setLastRecallTimestamp(new Date());
+			customer.setUuid(UUID.randomUUID());
+
+			customers.add(customer);
+		}
+		{
+			final Customer customer = new Customer();
+			customer.setName("Hinagiku");
+			customer.setLastRecallTimestamp(new Date());
+			customer.setUuid(UUID.randomUUID());
+
+			customers.add(customer);
+		}
+		{
+			final List<Customer> customerList = customers
+					.find("Archimedes Trajano");
+			assertEquals(0, customerList.size());
+		}
+		{
+			final List<Customer> customerList = customers.find("e");
+			assertEquals(1, customerList.size());
+			assertEquals("Excel", customerList.get(0).getName());
+		}
+		{
+			final List<Customer> customerList = customers.find("H");
+			assertEquals(3, customerList.size());
+		}
+		{
+			final List<Customer> customerList = customers.find("hayate");
+			assertEquals(1, customerList.size());
+			assertEquals("Hayate", customerList.get(0).getName());
+		}
 	}
 }
