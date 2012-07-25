@@ -17,12 +17,13 @@
 		<module>maven-jee6-test</module>
 		<module>ws-mdb-ejb</module>
 		<module>behavior-driven-testing</module>
+		<module>clustering</module>
 		<module>osgi-sample</module>
 		<module>nosql</module>
 	</modules>
 	<distributionManagement>
 		<site>
-			<!-- This is explicitly specified so that the deployed site has no project 
+			<!-- This is explicitly specified so that the deployed site has no project
 				ID for the multi-module. -->
 			<id>local</id>
 			<url>file:///${user.dir}/target/deployed-site</url>
