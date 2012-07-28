@@ -29,6 +29,12 @@
 			<artifactId>gson</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>de.flapdoodle.embedmongo</groupId>
+			<artifactId>de.flapdoodle.embedmongo</artifactId>
+			<version>1.16</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maven-jee6-test</artifactId>
 			<scope>test</scope>

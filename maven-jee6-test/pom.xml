@@ -32,11 +32,6 @@
 			<version>1.13</version>
 		</dependency>
 		<dependency>
-			<groupId>de.flapdoodle.embedmongo</groupId>
-			<artifactId>de.flapdoodle.embedmongo</artifactId>
-			<version>1.16</version>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-core</artifactId>
 			<version>5.6.0</version>
@@ -52,39 +47,9 @@
 			</exclusions>
 		</dependency>
 		<dependency>
-			<groupId>org.apache.cassandra</groupId>
-			<artifactId>cassandra-all</artifactId>
-			<version>1.1.2</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.xerial.snappy</groupId>
-					<artifactId>snappy-java</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
 			<version>10.9.1.0</version>
-		</dependency>
-		<dependency>
-			<groupId>org.cassandraunit</groupId>
-			<artifactId>cassandra-unit</artifactId>
-			<version>1.1.0.1</version>
-			<exclusions>
-				<exclusion>
-					<groupId>org.slf4j</groupId>
-					<artifactId>slf4j-log4j12</artifactId>
-				</exclusion>
-				<exclusion>
-					<groupId>org.xerial.snappy</groupId>
-					<artifactId>snappy-java</artifactId>
-				</exclusion>
-			</exclusions>
 		</dependency>
 		<dependency>
 			<groupId>org.easymock</groupId>
