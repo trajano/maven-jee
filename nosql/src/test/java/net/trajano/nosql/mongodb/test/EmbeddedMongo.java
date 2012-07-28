@@ -1,4 +1,4 @@
-package net.trajano.nosql.test;
+package net.trajano.nosql.mongodb.test;
 
 /**
  * Created with IntelliJ IDEA. User: trajano Date: 12-05-29 Time: 01:50 PM To

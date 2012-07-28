@@ -15,7 +15,7 @@
 	</parent>
 	<properties>
 		<project.build.sourceEncoding>utf8</project.build.sourceEncoding>
-		<!-- Without this, the dependency will try to connect to the remote repository
+		<!-- Without this, the dependency will try to connect to the remote repository 
 			all the time. -->
 		<dependency.locations.enabled>false</dependency.locations.enabled>
 	</properties>
@@ -106,7 +106,7 @@
 					<version>2.3.1</version>
 				</plugin>
 				<plugin>
-					<!-- Use an older version of the plugin due to the following issue in
+					<!-- Use an older version of the plugin due to the following issue in 
 						2.4 https://github.com/sonatype/m2eclipse-extras/issues/10 -->
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>2.3.2</version>
