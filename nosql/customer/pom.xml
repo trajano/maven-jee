@@ -4,16 +4,19 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.trajano.maven-jee6</groupId>
-		<artifactId>maven-jee6</artifactId>
+		<artifactId>nosql</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>nosql</artifactId>
-	<packaging>pom</packaging>
-	<description>This project is a testing ground for NOSQL databases.</description>
-	<modules>
-		<module>customer</module>
-		<module>customer-cassandra</module>
-		<module>customer-mongodb</module>
-	</modules>
+	<artifactId>customer</artifactId>
+	<packaging>bundle</packaging>
+	<description>Domain API</description>
+	<dependencies>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>maven-jee6-test</artifactId>
+			<version>${project.version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
 </project>
 

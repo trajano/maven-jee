@@ -4,29 +4,27 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>net.trajano.maven-jee6</groupId>
-		<artifactId>osgi-sample</artifactId>
+		<artifactId>nosql</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>blueprint.consumer</artifactId>
+	<artifactId>customer-mongodb</artifactId>
 	<packaging>bundle</packaging>
-	<description>This is an OSGi bundle that consumes other services that are provided by blueprint.  There is no direct dependency to the producer, that is handled at runtime using OSGi Blueprint.</description>
+	<description>Implementation using MongoDB.</description>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>hello.osgi</artifactId>
+			<artifactId>customer</artifactId>
 			<version>${project.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.commons</groupId>
-			<artifactId>commons-lang3</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
 		</dependency>
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
+			<version>2.2.2</version>
+		</dependency>
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>mongo-java-driver</artifactId>
+			<version>2.8.0</version>
 		</dependency>
 		<dependency>
 			<groupId>de.flapdoodle.embedmongo</groupId>
@@ -37,8 +35,17 @@
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>maven-jee6-test</artifactId>
+			<version>${project.version}</version>
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>scala-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
 </project>
 
