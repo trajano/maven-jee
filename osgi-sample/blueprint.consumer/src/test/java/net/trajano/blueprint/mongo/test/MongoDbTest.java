@@ -52,7 +52,7 @@ public class MongoDbTest {
 
 		// create runtime
 		final MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
-		mongodExecutable = runtime.prepare(new MongodConfig(Version.V2_0_4,
+		mongodExecutable = runtime.prepare(new MongodConfig(Version.V2_0_5,
 				port, Network.localhostIsIPv6()));
 		mongoProcess = mongodExecutable.start();
 
