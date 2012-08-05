@@ -3,6 +3,8 @@ package net.trajano.nosql.mongodb.test;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.UUID;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.enterprise.inject.Disposes;
 import javax.enterprise.inject.Produces;
@@ -15,7 +17,11 @@ import de.flapdoodle.embedmongo.MongoDBRuntime;
 import de.flapdoodle.embedmongo.MongodExecutable;
 import de.flapdoodle.embedmongo.MongodProcess;
 import de.flapdoodle.embedmongo.config.MongodConfig;
+import de.flapdoodle.embedmongo.config.MongodProcessOutputConfig;
+import de.flapdoodle.embedmongo.config.RuntimeConfig;
 import de.flapdoodle.embedmongo.distribution.Version;
+import de.flapdoodle.embedmongo.io.Processors;
+import de.flapdoodle.embedmongo.output.IProgressListener;
 import de.flapdoodle.embedmongo.runtime.Network;
 
 /**
@@ -42,12 +48,44 @@ public class CdiProducer {
 		return mongo.getDB(UUID.randomUUID().toString());
 	}
 
+	/**
+	 * This produces a MongoD executable for a given port. This builds it in
+	 * such a way that there is minimal logging.
+	 * 
+	 * @param port
+	 *            port to listen on
+	 * @return a MongoD executable instance
+	 * @throws IOException
+	 */
 	@Produces
 	@Singleton
 	public MongodExecutable createMongodExecutable(@EmbeddedMongo final int port)
 			throws IOException {
-		final MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
-		return runtime.prepare(new MongodConfig(Version.V2_0_5, port, Network
+		final Logger logger = Logger.getLogger("de.flapdoodle.embedmongo");
+		final RuntimeConfig config = new RuntimeConfig();
+		config.setMongodOutputConfig(new MongodProcessOutputConfig(Processors
+				.logTo(logger, Level.INFO), Processors.logTo(logger,
+				Level.SEVERE), Processors.logTo(logger, Level.FINE)));
+		config.setProgressListener(new IProgressListener() {
+
+			@Override
+			public void done(final String label) {
+			}
+
+			@Override
+			public void info(final String label, final String message) {
+			}
+
+			@Override
+			public void progress(final String label, final int percent) {
+			}
+
+			@Override
+			public void start(final String label) {
+			}
+		});
+		final MongoDBRuntime runtime = MongoDBRuntime.getInstance(config);
+		return runtime.prepare(new MongodConfig(Version.V2_0_6, port, Network
 				.localhostIsIPv6()));
 	}
 
