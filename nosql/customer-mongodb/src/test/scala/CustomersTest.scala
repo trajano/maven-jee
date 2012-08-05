@@ -4,8 +4,10 @@ import de.flapdoodle.embedmongo.distribution.Version
 import de.flapdoodle.embedmongo.runtime.Network
 import de.flapdoodle.embedmongo.MongoDBRuntime
 import java.util.{UUID, Date}
+import net.trajano.maven_jee6.test.LogUtil
 import net.trajano.nosql.{Customers, Customer}
 import net.trajano.nosql.internal.MongoDbCustomers
+import net.trajano.nosql.mongodb.test.CdiProducer
 import org.scalatest.FunSpec
 import org.scalatest.matchers.ShouldMatchers
 import org.scalatest.junit.JUnitRunner
@@ -21,8 +23,10 @@ class CustomersTest extends FunSpec with ShouldMatchers {
       customer.setUuid(UUID.randomUUID())
     }
     it("should find something that was added") {
-      val runtime = MongoDBRuntime.getDefaultInstance()
-      val mongodExecutable = runtime.prepare(new MongodConfig(Version.V2_1_1, 12345, Network.localhostIsIPv6()))
+    	  LogUtil.loadConfiguration();
+    
+      val producer = new CdiProducer() 
+      val mongodExecutable = producer.createMongodExecutable(12345);
       val mongoProcess = mongodExecutable.start()
       val mongo = new Mongo("localhost", 12345)
       val db = mongo.getDB(UUID.randomUUID().toString)
