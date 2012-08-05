@@ -4,12 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import javax.inject.Inject;
 
+import net.trajano.maven_jee6.test.LogUtil;
 import net.trajano.nosql.Customer;
 import net.trajano.nosql.Customers;
 import net.trajano.nosql.internal.MongoDbCustomers;
@@ -19,6 +21,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -35,6 +38,11 @@ public class CdiTest {
 		return ShrinkWrap.create(JavaArchive.class).addClass(CdiProducer.class)
 				.addClass(Customers.class).addClass(MongoDbCustomers.class)
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
+	}
+
+	@BeforeClass
+	public static void setLoggingConfiguration() throws IOException {
+		LogUtil.loadConfiguration();
 	}
 
 	@Inject
