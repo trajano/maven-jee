@@ -4,12 +4,11 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.UUID;
 
 import net.trajano.maven_jee6.test.LogUtil;
 
-import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -20,8 +19,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
-import de.flapdoodle.embedmongo.MongodExecutable;
-import de.flapdoodle.embedmongo.MongodProcess;
+import de.flapdoodle.embedmongo.distribution.Version;
+import de.flapdoodle.embedmongo.tests.MongodForTestsFactory;
 
 /**
  * Shows how to test using MongoDB without CDI. This is useful to show the steps
@@ -29,38 +28,26 @@ import de.flapdoodle.embedmongo.MongodProcess;
  * on http://stackoverflow.com/a/9830861/242042.
  */
 public class MongoDbTest {
+	private static MongodForTestsFactory testsFactory;
+
 	@BeforeClass
-	public static void setLoggingConfiguration() throws IOException {
+	public static void setMongoDB() throws IOException {
 		LogUtil.loadConfiguration();
+		testsFactory = MongodForTestsFactory.with(Version.Main.V2_0);
+	}
+
+	@AfterClass
+	public static void tearDownMongoDB() throws Exception {
+		testsFactory.shutdown();
 	}
 
 	private DB db;
-	private MongodExecutable mongodExecutable;
-
-	private MongodProcess mongoProcess;
 
 	@Before
 	public void setUpMongoDB() throws Exception {
-		// Get open port
-		final ServerSocket socket = new ServerSocket(0);
-		final int port = socket.getLocalPort();
-		socket.close();
-
-		// create runtime
-		final CdiProducer producer = new CdiProducer();
-		mongodExecutable = producer.createMongodExecutable(port);
-		mongoProcess = mongodExecutable.start();
-
 		// create database
-		final Mongo mongo = new Mongo("localhost", port);
+		final Mongo mongo = testsFactory.newMongo();
 		db = mongo.getDB(UUID.randomUUID().toString());
-	}
-
-	@After
-	public void tearDownMongoDB() throws Exception {
-		// cleanup
-		mongoProcess.stop();
-		mongodExecutable.cleanup();
 	}
 
 	/**
