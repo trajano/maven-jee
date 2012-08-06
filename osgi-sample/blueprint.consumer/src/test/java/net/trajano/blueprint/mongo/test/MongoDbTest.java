@@ -1,20 +1,25 @@
 package net.trajano.blueprint.mongo.test;
 
-import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.createStrictMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import net.trajano.blueprint.consumer.internal.ServiceUserBean;
 import net.trajano.hello.osgi.IHello;
+import net.trajano.maven_jee6.test.LogUtil;
 
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -29,7 +34,11 @@ import de.flapdoodle.embedmongo.MongoDBRuntime;
 import de.flapdoodle.embedmongo.MongodExecutable;
 import de.flapdoodle.embedmongo.MongodProcess;
 import de.flapdoodle.embedmongo.config.MongodConfig;
+import de.flapdoodle.embedmongo.config.MongodProcessOutputConfig;
+import de.flapdoodle.embedmongo.config.RuntimeConfig;
 import de.flapdoodle.embedmongo.distribution.Version;
+import de.flapdoodle.embedmongo.io.Processors;
+import de.flapdoodle.embedmongo.output.IProgressListener;
 import de.flapdoodle.embedmongo.runtime.Network;
 
 /**
@@ -38,6 +47,11 @@ import de.flapdoodle.embedmongo.runtime.Network;
  * on http://stackoverflow.com/a/9830861/242042.
  */
 public class MongoDbTest {
+	@BeforeClass
+	public static void setLoggingConfiguration() throws IOException {
+		LogUtil.loadConfiguration();
+	}
+
 	private MongodExecutable mongodExecutable;
 
 	private MongodProcess mongoProcess;
@@ -51,11 +65,33 @@ public class MongoDbTest {
 		socket.close();
 
 		// create runtime
-		final MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
-		mongodExecutable = runtime.prepare(new MongodConfig(Version.V2_0_5,
+		final Logger logger = Logger.getLogger("de.flapdoodle.embedmongo");
+		final RuntimeConfig config = new RuntimeConfig();
+		config.setMongodOutputConfig(new MongodProcessOutputConfig(Processors
+				.logTo(logger, Level.INFO), Processors.logTo(logger,
+				Level.SEVERE), Processors.logTo(logger, Level.FINE)));
+		config.setProgressListener(new IProgressListener() {
+
+			@Override
+			public void done(final String label) {
+			}
+
+			@Override
+			public void info(final String label, final String message) {
+			}
+
+			@Override
+			public void progress(final String label, final int percent) {
+			}
+
+			@Override
+			public void start(final String label) {
+			}
+		});
+		final MongoDBRuntime runtime = MongoDBRuntime.getInstance(config);
+		mongodExecutable = runtime.prepare(new MongodConfig(Version.Main.V2_0,
 				port, Network.localhostIsIPv6()));
 		mongoProcess = mongodExecutable.start();
-
 	}
 
 	@After
@@ -67,8 +103,8 @@ public class MongoDbTest {
 
 	@Test
 	public void testMock() throws Exception {
-		final Executor executor = createMock(Executor.class);
-		final IHello hello = createMock(IHello.class);
+		final Executor executor = createStrictMock(Executor.class);
+		final IHello hello = createStrictMock(IHello.class);
 		final MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(
 				new Mongo("localhost", port), "database");
 		final BlockingQueue<String> queue = new ArrayBlockingQueue<String>(20);

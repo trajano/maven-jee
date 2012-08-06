@@ -85,8 +85,8 @@ public class CdiProducer {
 			}
 		});
 		final MongoDBRuntime runtime = MongoDBRuntime.getInstance(config);
-		return runtime.prepare(new MongodConfig(Version.V2_0_6, port, Network
-				.localhostIsIPv6()));
+		return runtime.prepare(new MongodConfig(Version.Main.V2_0, port,
+				Network.localhostIsIPv6()));
 	}
 
 	@Produces
