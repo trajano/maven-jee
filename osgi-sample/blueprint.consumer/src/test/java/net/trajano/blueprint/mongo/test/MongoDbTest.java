@@ -6,19 +6,15 @@ import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 
 import java.io.IOException;
-import java.net.ServerSocket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import net.trajano.blueprint.consumer.internal.ServiceUserBean;
 import net.trajano.hello.osgi.IHello;
 import net.trajano.maven_jee6.test.LogUtil;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.mongodb.MongoDbFactory;
@@ -28,18 +24,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 
-import de.flapdoodle.embedmongo.MongoDBRuntime;
-import de.flapdoodle.embedmongo.MongodExecutable;
-import de.flapdoodle.embedmongo.MongodProcess;
-import de.flapdoodle.embedmongo.config.MongodConfig;
-import de.flapdoodle.embedmongo.config.MongodProcessOutputConfig;
-import de.flapdoodle.embedmongo.config.RuntimeConfig;
 import de.flapdoodle.embedmongo.distribution.Version;
-import de.flapdoodle.embedmongo.io.Processors;
-import de.flapdoodle.embedmongo.output.IProgressListener;
-import de.flapdoodle.embedmongo.runtime.Network;
+import de.flapdoodle.embedmongo.tests.MongodForTestsFactory;
 
 /**
  * Shows how to test using MongoDB without CDI. This is useful to show the steps
@@ -47,58 +34,17 @@ import de.flapdoodle.embedmongo.runtime.Network;
  * on http://stackoverflow.com/a/9830861/242042.
  */
 public class MongoDbTest {
+	private static MongodForTestsFactory testsFactory;
+
 	@BeforeClass
 	public static void setLoggingConfiguration() throws IOException {
 		LogUtil.loadConfiguration();
+		testsFactory = MongodForTestsFactory.with(Version.Main.V2_0);
 	}
 
-	private MongodExecutable mongodExecutable;
-
-	private MongodProcess mongoProcess;
-	private int port;
-
-	@Before
-	public void setUpMongoDB() throws Exception {
-		// Get open port
-		final ServerSocket socket = new ServerSocket(0);
-		port = socket.getLocalPort();
-		socket.close();
-
-		// create runtime
-		final Logger logger = Logger.getLogger("de.flapdoodle.embedmongo");
-		final RuntimeConfig config = new RuntimeConfig();
-		config.setMongodOutputConfig(new MongodProcessOutputConfig(Processors
-				.logTo(logger, Level.INFO), Processors.logTo(logger,
-				Level.SEVERE), Processors.logTo(logger, Level.FINE)));
-		config.setProgressListener(new IProgressListener() {
-
-			@Override
-			public void done(final String label) {
-			}
-
-			@Override
-			public void info(final String label, final String message) {
-			}
-
-			@Override
-			public void progress(final String label, final int percent) {
-			}
-
-			@Override
-			public void start(final String label) {
-			}
-		});
-		final MongoDBRuntime runtime = MongoDBRuntime.getInstance(config);
-		mongodExecutable = runtime.prepare(new MongodConfig(Version.Main.V2_0,
-				port, Network.localhostIsIPv6()));
-		mongoProcess = mongodExecutable.start();
-	}
-
-	@After
-	public void tearDownMongoDB() throws Exception {
-		// cleanup
-		mongoProcess.stop();
-		mongodExecutable.cleanup();
+	@AfterClass
+	public static void tearDownMongoDB() throws Exception {
+		testsFactory.shutdown();
 	}
 
 	@Test
@@ -106,7 +52,7 @@ public class MongoDbTest {
 		final Executor executor = createStrictMock(Executor.class);
 		final IHello hello = createStrictMock(IHello.class);
 		final MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(
-				new Mongo("localhost", port), "database");
+				testsFactory.newMongo(), "database");
 		final BlockingQueue<String> queue = new ArrayBlockingQueue<String>(20);
 		expect(hello.echo("hello")).andReturn("hello");
 		replay(hello);
@@ -118,7 +64,7 @@ public class MongoDbTest {
 	@Test
 	public void testUsingDBFactory() throws Exception {
 		final MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(
-				new Mongo("localhost", port), "database");
+				testsFactory.newMongo(), "database");
 		final DB db = mongoDbFactory.getDb();
 		final DBCollection coll = db.getCollection("testCollection");
 		{
