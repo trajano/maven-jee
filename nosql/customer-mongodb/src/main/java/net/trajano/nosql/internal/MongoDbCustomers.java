@@ -26,7 +26,8 @@ public class MongoDbCustomers implements Customers {
 	private final DBCollection collection;
 
 	/**
-	 * Constructs the DAO.
+	 * Constructs the DAO. Sets the collection and ensures the indices are set
+	 * on the collection.
 	 * 
 	 * @param db
 	 *            MongoDB instance.
@@ -34,6 +35,8 @@ public class MongoDbCustomers implements Customers {
 	@Inject
 	public MongoDbCustomers(final DB db) {
 		collection = db.getCollection("Customers");
+		collection.ensureIndex("name");
+		collection.ensureIndex("uuid");
 	}
 
 	/**
@@ -66,6 +69,15 @@ public class MongoDbCustomers implements Customers {
 			ret.add(gson.fromJson(dbObject.toString(), Customer.class));
 		}
 		return ret;
+	}
+
+	/**
+	 * Provides the collection storing the data. This is used for testing.
+	 * 
+	 * @return collection.
+	 */
+	public DBCollection getDBCollection() {
+		return collection;
 	}
 
 }
