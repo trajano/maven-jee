@@ -3,11 +3,15 @@ package net.trajano.nosql.mongodb.test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+import java.io.IOException;
 import java.net.ServerSocket;
 import java.util.UUID;
 
+import net.trajano.maven_jee6.test.LogUtil;
+
 import org.junit.After;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import com.mongodb.BasicDBObject;
@@ -16,12 +20,8 @@ import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
 import com.mongodb.Mongo;
 
-import de.flapdoodle.embedmongo.MongoDBRuntime;
 import de.flapdoodle.embedmongo.MongodExecutable;
 import de.flapdoodle.embedmongo.MongodProcess;
-import de.flapdoodle.embedmongo.config.MongodConfig;
-import de.flapdoodle.embedmongo.distribution.Version;
-import de.flapdoodle.embedmongo.runtime.Network;
 
 /**
  * Shows how to test using MongoDB without CDI. This is useful to show the steps
@@ -29,9 +29,14 @@ import de.flapdoodle.embedmongo.runtime.Network;
  * on http://stackoverflow.com/a/9830861/242042.
  */
 public class MongoDbTest {
-	private DB db;
+	@BeforeClass
+	public static void setLoggingConfiguration() throws IOException {
+		LogUtil.loadConfiguration();
+	}
 
+	private DB db;
 	private MongodExecutable mongodExecutable;
+
 	private MongodProcess mongoProcess;
 
 	@Before
@@ -42,9 +47,8 @@ public class MongoDbTest {
 		socket.close();
 
 		// create runtime
-		final MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
-		mongodExecutable = runtime.prepare(new MongodConfig(Version.V2_0_4,
-				port, Network.localhostIsIPv6()));
+		final CdiProducer producer = new CdiProducer();
+		mongodExecutable = producer.createMongodExecutable(port);
 		mongoProcess = mongodExecutable.start();
 
 		// create database

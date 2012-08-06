@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>de.flapdoodle.embedmongo</groupId>
 			<artifactId>de.flapdoodle.embedmongo</artifactId>
-			<version>1.16</version>
+			<version>1.17</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
