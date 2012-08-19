@@ -59,13 +59,13 @@ public class EmbeddedCassandraTest extends AbstractCassandraUnit4TestCase {
 	}
 
 	/**
-	 * Assert data structure as seen from JSON.
+	 * Assert column family count
 	 * 
 	 * @throws Exception
 	 */
 	@Test
 	public void testJSONData() throws Exception {
-		assertEquals(5, getDataSet().getColumnFamilies().size());
+		assertEquals(1, getDataSet().getColumnFamilies().size());
 		assertEquals("beautifulColumnFamilyName", getDataSet()
 				.getColumnFamilies().get(0).getName());
 		assertEquals(2, getDataSet().getColumnFamilies().get(0).getRows()
