@@ -1,7 +1,8 @@
-import org.scalatest.FunSuite
 import scala.collection.mutable.Stack
-import org.scalatest.junit.JUnitRunner
+
 import org.junit.runner.RunWith
+import org.scalatest.FunSuite
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class SampleScalaTest extends FunSuite {

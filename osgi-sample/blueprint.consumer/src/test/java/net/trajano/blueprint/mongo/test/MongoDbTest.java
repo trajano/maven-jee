@@ -5,16 +5,17 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
 import static org.junit.Assert.assertEquals;
 
-import java.net.ServerSocket;
+import java.io.IOException;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Executor;
 
 import net.trajano.blueprint.consumer.internal.ServiceUserBean;
 import net.trajano.hello.osgi.IHello;
+import net.trajano.maven_jee6.test.LogUtil;
 
-import org.junit.After;
-import org.junit.Before;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.data.mongodb.MongoDbFactory;
 import org.springframework.data.mongodb.core.SimpleMongoDbFactory;
@@ -23,14 +24,9 @@ import com.mongodb.BasicDBObject;
 import com.mongodb.DB;
 import com.mongodb.DBCollection;
 import com.mongodb.DBObject;
-import com.mongodb.Mongo;
 
-import de.flapdoodle.embedmongo.MongoDBRuntime;
-import de.flapdoodle.embedmongo.MongodExecutable;
-import de.flapdoodle.embedmongo.MongodProcess;
-import de.flapdoodle.embedmongo.config.MongodConfig;
-import de.flapdoodle.embedmongo.distribution.Version;
-import de.flapdoodle.embedmongo.runtime.Network;
+import de.flapdoodle.embed.mongo.distribution.Version;
+import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory;
 
 /**
  * Shows how to test using MongoDB without CDI. This is useful to show the steps
@@ -38,31 +34,21 @@ import de.flapdoodle.embedmongo.runtime.Network;
  * on http://stackoverflow.com/a/9830861/242042.
  */
 public class MongoDbTest {
-	private MongodExecutable mongodExecutable;
+	private static MongodForTestsFactory testsFactory;
 
-	private MongodProcess mongoProcess;
-	private int port;
-
-	@Before
-	public void setUpMongoDB() throws Exception {
-		// Get open port
-		final ServerSocket socket = new ServerSocket(0);
-		port = socket.getLocalPort();
-		socket.close();
-
-		// create runtime
-		final MongoDBRuntime runtime = MongoDBRuntime.getDefaultInstance();
-		mongodExecutable = runtime.prepare(new MongodConfig(Version.V2_0_5,
-				port, Network.localhostIsIPv6()));
-		mongoProcess = mongodExecutable.start();
-
+	@BeforeClass
+	public static void setLoggingConfiguration() throws IOException {
+		LogUtil.loadConfiguration();
 	}
 
-	@After
-	public void tearDownMongoDB() throws Exception {
-		// cleanup
-		mongoProcess.stop();
-		mongodExecutable.cleanup();
+	@BeforeClass
+	public static void setMongoDB() throws IOException {
+		testsFactory = MongodForTestsFactory.with(Version.Main.V2_0);
+	}
+
+	@AfterClass
+	public static void tearDownMongoDB() throws Exception {
+		testsFactory.shutdown();
 	}
 
 	@Test
@@ -70,7 +56,7 @@ public class MongoDbTest {
 		final Executor executor = createMock(Executor.class);
 		final IHello hello = createMock(IHello.class);
 		final MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(
-				new Mongo("localhost", port), "database");
+				testsFactory.newMongo(), "database");
 		final BlockingQueue<String> queue = new ArrayBlockingQueue<String>(20);
 		expect(hello.echo("hello")).andReturn("hello");
 		replay(hello);
@@ -82,7 +68,7 @@ public class MongoDbTest {
 	@Test
 	public void testUsingDBFactory() throws Exception {
 		final MongoDbFactory mongoDbFactory = new SimpleMongoDbFactory(
-				new Mongo("localhost", port), "database");
+				testsFactory.newMongo(), "database");
 		final DB db = mongoDbFactory.getDb();
 		final DBCollection coll = db.getCollection("testCollection");
 		{

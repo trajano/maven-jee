@@ -1,8 +1,9 @@
-import org.scalatest.FlatSpec
-import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.junit.JUnitRunner
-import org.junit.runner.RunWith
 import scala.collection.mutable.Stack
+
+import org.junit.runner.RunWith
+import org.scalatest.FlatSpec
+import org.scalatest.junit.JUnitRunner
+import org.scalatest.matchers.ShouldMatchers
 
 @RunWith(classOf[JUnitRunner])
 class SampleScalaSpecTest extends FlatSpec with ShouldMatchers {
