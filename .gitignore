@@ -2,6 +2,7 @@ target/
 .project
 .settings/
 .classpath
+.cache
 .idea
 *.iml
 derby.log
