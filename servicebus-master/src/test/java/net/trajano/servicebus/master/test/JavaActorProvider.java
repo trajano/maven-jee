@@ -1,8 +1,10 @@
 package net.trajano.servicebus.master.test;
 
+import java.io.Serializable;
+
 import net.trajano.servicebus.master.ActorProvider;
+import akka.actor.ActorContext;
 import akka.actor.ActorRef;
-import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.actor.UntypedActor;
 
@@ -10,9 +12,9 @@ public class JavaActorProvider implements ActorProvider {
 	public static class Actor extends UntypedActor {
 
 		@Override
-		public void onReceive(Object message) throws Exception {
+		public void onReceive(final Object message) throws Exception {
 			if (message instanceof Message) {
-				System.out.println(((Message) message).message);
+				System.out.println(((Message) message).getMessage());
 			} else {
 				unhandled(message);
 			}
@@ -20,28 +22,30 @@ public class JavaActorProvider implements ActorProvider {
 
 	}
 
-	public static class Message {
-		public String message;
+	public static class Message implements Serializable {
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+		private final String message;
+
+		public Message(final String message) {
+			this.message = message;
+		}
+
+		public String getMessage() {
+			return message;
+		}
 	}
 
 	@Override
-	public Class<?>[] handles() {
+	public Class<?>[] messageClassesHandled() {
 		return new Class<?>[] { Message.class };
 	}
 
-	/*
-	 * override def handles() = Set(classOf[SampleMessage]) override def
-	 * newActor(system: ActorSystem) = system.actorOf(Props[SampleActor], name =
-	 * "sample") }
-	 * 
-	 * case class SampleMessage(message: String)
-	 * 
-	 * class SampleActor extends Actor { override def receive = { case
-	 * SampleMessage(message) => { System.out.println(message) } } }
-	 */
-
 	@Override
-	public ActorRef newActor(final ActorSystem system) {
-		return system.actorOf(new Props(Actor.class));
+	public ActorRef newActor(final ActorContext context) {
+		return context.actorOf(new Props(Actor.class));
 	}
+
 }
