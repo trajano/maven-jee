@@ -16,6 +16,10 @@ public class AkkaServiceBus extends ActorSystemActivator implements ServiceBus,
 
 	private ActorRef master;
 
+	/**
+	 * Ask system given this message, tell me the result.
+	 */
+
 	@Override
 	public void configure(final BundleContext bundleContext,
 			final ActorSystem actorSystem) {
@@ -35,5 +39,4 @@ public class AkkaServiceBus extends ActorSystemActivator implements ServiceBus,
 	public void tell(final Object message) {
 		master.tell(message);
 	}
-
 }
