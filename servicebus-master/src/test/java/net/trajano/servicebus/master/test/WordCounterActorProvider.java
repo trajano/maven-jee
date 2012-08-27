@@ -2,7 +2,6 @@ package net.trajano.servicebus.master.test;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.concurrent.Future;
 
 import net.trajano.servicebus.master.MapReduceActorProvider;
 import net.trajano.servicebus.master.MapReduceWork;
@@ -24,12 +23,6 @@ public class WordCounterActorProvider extends MapReduceActorProvider {
 		public String toString() {
 			return String.valueOf(count);
 		}
-	}
-
-	@Override
-	public Future<Object> ask() {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 	@Override

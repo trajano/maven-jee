@@ -1,7 +1,5 @@
 package net.trajano.servicebus.master;
 
-import java.util.concurrent.Future;
-
 import net.trajano.servicebus.master.internal.MapReduceActor;
 import akka.actor.ActorContext;
 import akka.actor.ActorRef;
@@ -17,11 +15,6 @@ import akka.actor.UntypedActorFactory;
  * can be used but it may be prohibitive when the parameter list is too long.
  */
 public abstract class MapReduceActorProvider implements ActorProvider {
-
-	/**
-	 * This provides a {@link Future} that will contain the final result.
-	 */
-	public abstract Future<Object> ask();
 
 	/**
 	 * Initialize the accumulator.

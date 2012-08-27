@@ -6,15 +6,25 @@ import net.trajano.servicebus.master.ServiceBus;
 import org.osgi.framework.BundleActivator;
 import org.osgi.framework.BundleContext;
 
+import scala.concurrent.Future;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
 import akka.osgi.ActorSystemActivator;
+import akka.pattern.Patterns;
+import akka.util.Timeout;
 
 public class AkkaServiceBus extends ActorSystemActivator implements ServiceBus,
 		BundleActivator {
 
 	private ActorRef master;
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public <T> Future<T> ask(final Class<T> messageClass, final Timeout timeout) {
+		return (Future<T>) Patterns.ask(master, new Asked(messageClass),
+				timeout);
+	}
 
 	/**
 	 * Ask system given this message, tell me the result.
@@ -43,4 +53,5 @@ public class AkkaServiceBus extends ActorSystemActivator implements ServiceBus,
 	public void tell(final Object message) {
 		master.tell(message);
 	}
+
 }

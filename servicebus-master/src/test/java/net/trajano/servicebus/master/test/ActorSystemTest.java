@@ -1,6 +1,7 @@
 package net.trajano.servicebus.master.test;
 
 import static org.mockito.Mockito.mock;
+import net.trajano.servicebus.master.ActorProvider;
 import net.trajano.servicebus.master.internal.ActorDeregistration;
 import net.trajano.servicebus.master.internal.ActorRegistration;
 import net.trajano.servicebus.master.internal.AkkaServiceBus;
@@ -14,6 +15,17 @@ import akka.actor.ActorSystem;
 import akka.actor.Props;
 
 public class ActorSystemTest {
+	@Test
+	public void exceptionProvider() throws Exception {
+		final ActorSystem system = ActorSystem.create("PiSystem");
+		final AkkaServiceBus serviceBus = new AkkaServiceBus();
+		serviceBus.configure(mock(BundleContext.class), system);
+		final ActorProvider provider = new ExceptionalActorProvider();
+		serviceBus.registerActorProvider(provider);
+		serviceBus.tell("hello");
+		serviceBus.deregisterActorProvider(provider);
+	}
+
 	@Test
 	public void nomessagesystem() throws Exception {
 		final ActorSystem system = ActorSystem.create("PiSystem");
@@ -42,8 +54,6 @@ public class ActorSystemTest {
 		serviceBus.registerActorProvider(provider);
 		serviceBus.tell(new JavaActorProvider.Message("hello"));
 		serviceBus.deregisterActorProvider(provider);
-		// system.(PoisonPill.getInstance());
-		// system.awaitTermination(Duration.parse("2 seconds"));
-		Thread.sleep(2000);
 	}
+
 }

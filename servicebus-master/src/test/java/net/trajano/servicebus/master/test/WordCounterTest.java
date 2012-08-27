@@ -8,7 +8,6 @@ import java.io.InputStreamReader;
 
 import net.trajano.servicebus.master.ActorProvider;
 import net.trajano.servicebus.master.internal.AkkaServiceBus;
-import net.trajano.servicebus.master.internal.Asked;
 
 import org.junit.Test;
 import org.osgi.framework.BundleContext;
@@ -17,7 +16,7 @@ import scala.concurrent.Await;
 import scala.concurrent.Future;
 import scala.concurrent.util.Duration;
 import akka.actor.ActorSystem;
-import akka.pattern.Patterns;
+import akka.util.Timeout;
 
 /**
  * Objective, I should be able to do multi-level map reduce.
@@ -56,12 +55,13 @@ public class WordCounterTest {
 		serviceBus.configure(mock(BundleContext.class), system);
 		final ActorProvider provider = new WordCounterActorProvider();
 		serviceBus.registerActorProvider(provider);
-		final Future<Object> ask = Patterns.ask(serviceBus.getMaster(),
-				new Asked(WordCounterActorProvider.Accumulator.class), 10000);
+		final Future<WordCounterActorProvider.Accumulator> ask = serviceBus
+				.ask(WordCounterActorProvider.Accumulator.class,
+						Timeout.intToTimeout(1000));
 		serviceBus.tell("lipsum.txt");
 		serviceBus.deregisterActorProvider(provider);
-		final WordCounterActorProvider.Accumulator result = (WordCounterActorProvider.Accumulator) Await
-				.result(ask, Duration.parse("2 seconds"));
+		final WordCounterActorProvider.Accumulator result = Await.result(ask,
+				Duration.parse("2 seconds"));
 		assertEquals(512, result.getCount());
 	}
 }
