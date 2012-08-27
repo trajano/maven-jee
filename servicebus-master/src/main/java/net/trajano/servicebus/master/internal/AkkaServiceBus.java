@@ -31,6 +31,10 @@ public class AkkaServiceBus extends ActorSystemActivator implements ServiceBus,
 		master.tell(new ActorDeregistration(provider));
 	}
 
+	public ActorRef getMaster() {
+		return master;
+	}
+
 	public void registerActorProvider(final ActorProvider provider) {
 		master.tell(new ActorRegistration(provider));
 	}

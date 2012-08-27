@@ -42,5 +42,8 @@ public class ActorSystemTest {
 		serviceBus.registerActorProvider(provider);
 		serviceBus.tell(new JavaActorProvider.Message("hello"));
 		serviceBus.deregisterActorProvider(provider);
+		// system.(PoisonPill.getInstance());
+		// system.awaitTermination(Duration.parse("2 seconds"));
+		Thread.sleep(2000);
 	}
 }
