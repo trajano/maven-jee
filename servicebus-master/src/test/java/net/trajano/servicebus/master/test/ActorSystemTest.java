@@ -15,7 +15,15 @@ import akka.actor.Props;
 
 public class ActorSystemTest {
 	@Test
-	public void failrunSystem() throws Exception {
+	public void nomessagesystem() throws Exception {
+		final ActorSystem system = ActorSystem.create("PiSystem");
+		final ActorRef master = system.actorOf(new Props(MasterActor.class),
+				"master");
+		master.tell(new JavaActorProvider.Message("hello"));
+	}
+
+	@Test
+	public void runsystem() throws Exception {
 		final ActorSystem system = ActorSystem.create("PiSystem");
 		final ActorRef master = system.actorOf(new Props(MasterActor.class),
 				"master");
@@ -23,14 +31,6 @@ public class ActorSystemTest {
 		master.tell(new ActorRegistration(provider));
 		master.tell(new JavaActorProvider.Message("hello"));
 		master.tell(new ActorDeregistration(provider));
-	}
-
-	@Test
-	public void runSystem() throws Exception {
-		final ActorSystem system = ActorSystem.create("PiSystem");
-		final ActorRef master = system.actorOf(new Props(MasterActor.class),
-				"master");
-		master.tell(new JavaActorProvider.Message("hello"));
 	}
 
 	@Test

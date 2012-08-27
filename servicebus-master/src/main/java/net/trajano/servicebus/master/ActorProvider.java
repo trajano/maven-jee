@@ -5,10 +5,7 @@ import akka.actor.ActorRef;
 
 /**
  * This defines an actor provider. This is generally used for sending messages
- * where there is no result needed to amalgamate. It only handles
- * 
- * @author trajano
- * 
+ * where there is no result needed to amalgamate.
  */
 public interface ActorProvider {
 	/**

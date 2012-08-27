@@ -9,8 +9,6 @@ import akka.actor.UntypedActor;
 public class MasterActor extends UntypedActor {
 
 	/**
-	 * Only look up by exact class, polymorphic messages are not supported (and
-	 * would significantly slow down the processing).
 	 */
 	private final Map<Class<?>, ActorProvider> providers = new HashMap<>();
 
@@ -35,11 +33,13 @@ public class MasterActor extends UntypedActor {
 			}
 			return;
 		}
-		final ActorProvider provider = providers.get(message.getClass());
-		if (provider == null) {
-			unhandled(message);
-			return;
+		for (final Class<?> messageClass : providers.keySet()) {
+			if (messageClass.isInstance(message)) {
+				providers.get(messageClass).newActor(getContext())
+						.tell(message);
+				return;
+			}
 		}
-		provider.newActor(getContext()).tell(message);
+		unhandled(message);
 	}
 }
