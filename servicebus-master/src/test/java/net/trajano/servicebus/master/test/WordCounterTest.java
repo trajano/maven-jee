@@ -57,7 +57,7 @@ public class WordCounterTest {
 		serviceBus.registerActorProvider(provider);
 		final Future<WordCounterActorProvider.Accumulator> ask = serviceBus
 				.ask(WordCounterActorProvider.Accumulator.class,
-						Timeout.intToTimeout(1000));
+						Timeout.intToTimeout(2000));
 		serviceBus.tell("lipsum.txt");
 		serviceBus.deregisterActorProvider(provider);
 		final WordCounterActorProvider.Accumulator result = Await.result(ask,

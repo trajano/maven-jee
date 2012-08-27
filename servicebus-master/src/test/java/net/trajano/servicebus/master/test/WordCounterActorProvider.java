@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import net.trajano.servicebus.master.MapReduceActorProvider;
-import net.trajano.servicebus.master.MapReduceWork;
 import akka.actor.ActorRef;
 
 public class WordCounterActorProvider extends MapReduceActorProvider {
@@ -38,7 +37,7 @@ public class WordCounterActorProvider extends MapReduceActorProvider {
 		int count = 0;
 		String line = reader.readLine();
 		while (line != null) {
-			actor.tell(new MapReduceWork(line));
+			actor.tell(line);
 			++count;
 			line = reader.readLine();
 		}

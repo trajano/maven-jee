@@ -29,17 +29,16 @@ public abstract class MapReduceActorProvider implements ActorProvider {
 	/**
 	 * This takes a given message and tells another actor the message.
 	 * Implementors of this class must call {@link ActorRef#tell(Object)} with
-	 * the message {@link MapReduceWork} containing the derived message from the
-	 * map.
+	 * the derived message from the map to the worker.
 	 * 
 	 * @param message
-	 * @param actor
+	 * @param worker
 	 *            this is the actor that is supposed to listen for work
 	 *            messages.
 	 * @return number of split items
 	 * @throws Exception
 	 */
-	public abstract int map(Object message, ActorRef actor) throws Exception;
+	public abstract int map(Object message, ActorRef worker) throws Exception;
 
 	@Override
 	public final ActorRef newActor(final ActorContext context) {
