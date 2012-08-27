@@ -11,10 +11,14 @@ import akka.actor.UntypedActorFactory;
  * This is an actor provider that handles data that uses the map-reduce pattern.
  * The actors are internal implementations.
  * 
- * TODO determine whether we should genericify this, there are many types that
- * can be used but it may be prohibitive when the parameter list is too long.
+ * @param <A>
+ *            accumulator
+ * @param <D>
+ *            message type derived from mapping.
+ * @param <R>
+ *            processing result.
  */
-public abstract class MapReduceActorProvider implements ActorProvider {
+public abstract class MapReduceActorProvider<A, D, R> implements ActorProvider {
 
 	/**
 	 * Initialize the accumulator.
@@ -24,7 +28,7 @@ public abstract class MapReduceActorProvider implements ActorProvider {
 	 * 
 	 * @return
 	 */
-	public abstract Object initializeAccumulator(Object message);
+	public abstract A initializeAccumulator(Object message);
 
 	/**
 	 * This takes a given message and tells another actor the message.
@@ -47,7 +51,7 @@ public abstract class MapReduceActorProvider implements ActorProvider {
 
 			@Override
 			public UntypedActor create() {
-				return new MapReduceActor(MapReduceActorProvider.this);
+				return new MapReduceActor<>(MapReduceActorProvider.this);
 			}
 		}), getClass().getName());
 	}
@@ -60,7 +64,7 @@ public abstract class MapReduceActorProvider implements ActorProvider {
 	 * @return the results of the processing. This may be <code>null</code> if
 	 *         there is no response expected.
 	 */
-	public abstract Object process(Object derivedMessage);
+	public abstract R process(D derivedMessage);
 
 	/**
 	 * Combines the results into one.
@@ -70,5 +74,5 @@ public abstract class MapReduceActorProvider implements ActorProvider {
 	 * @param result
 	 *            result from the work to be reduced.
 	 */
-	public abstract void reduce(Object accumulator, Object result);
+	public abstract void reduce(A accumulator, R result);
 }

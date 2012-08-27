@@ -7,16 +7,16 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.actor.UntypedActorFactory;
 
-public class MapReduceActor extends UntypedActor {
+public class MapReduceActor<A, D, R> extends UntypedActor {
 
 	/**
 	 * Accumulator.
 	 */
-	private Object accumulator;
+	private A accumulator;
 	private int mappedCount;
-	private final MapReduceActorProvider provider;
+	private final MapReduceActorProvider<A, D, R> provider;
 
-	public MapReduceActor(final MapReduceActorProvider provider) {
+	public MapReduceActor(final MapReduceActorProvider<A, D, R> provider) {
 		this.provider = provider;
 	}
 
@@ -33,6 +33,7 @@ public class MapReduceActor extends UntypedActor {
 	 * There are three supporting classes for this one: a mapper, a processor
 	 * and a reducer.
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public void onReceive(final Object message) throws Exception {
 		if (isProviderHandleMessage(message)) {
@@ -43,7 +44,7 @@ public class MapReduceActor extends UntypedActor {
 
 						@Override
 						public Actor create() {
-							return new MapReduceWorkerActor(provider);
+							return new MapReduceWorkerActor<A, D, R>(provider);
 						}
 					}));
 			mappedCount = provider.map(message, worker);
@@ -52,7 +53,7 @@ public class MapReduceActor extends UntypedActor {
 			}
 		} else if (message instanceof MapReduceIntermediateResult) {
 			provider.reduce(accumulator,
-					((MapReduceIntermediateResult) message).getResult());
+					(R) ((MapReduceIntermediateResult) message).getResult());
 			--mappedCount;
 			if (mappedCount == 0) {
 				getContext().parent().tell(accumulator);

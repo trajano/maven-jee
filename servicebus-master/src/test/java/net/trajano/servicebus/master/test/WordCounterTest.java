@@ -55,12 +55,11 @@ public class WordCounterTest {
 		serviceBus.configure(mock(BundleContext.class), system);
 		final ActorProvider provider = new WordCounterActorProvider();
 		serviceBus.registerActorProvider(provider);
-		final Future<WordCounterActorProvider.Accumulator> ask = serviceBus
-				.ask(WordCounterActorProvider.Accumulator.class,
-						Timeout.intToTimeout(2000));
+		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
+				Timeout.intToTimeout(2000));
 		serviceBus.tell("lipsum.txt");
 		serviceBus.deregisterActorProvider(provider);
-		final WordCounterActorProvider.Accumulator result = Await.result(ask,
+		final Accumulator result = Await.result(ask,
 				Duration.parse("2 seconds"));
 		assertEquals(512, result.getCount());
 	}

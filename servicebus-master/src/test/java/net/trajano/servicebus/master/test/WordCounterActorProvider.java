@@ -6,26 +6,28 @@ import java.io.InputStreamReader;
 import net.trajano.servicebus.master.MapReduceActorProvider;
 import akka.actor.ActorRef;
 
-public class WordCounterActorProvider extends MapReduceActorProvider {
-	public static class Accumulator {
-		private int count = 0;
+class Accumulator {
+	private int count = 0;
 
-		public void add(final int n) {
-			count += n;
-		}
+	public void add(final int n) {
+		count += n;
+	}
 
-		public int getCount() {
-			return count;
-		}
-
-		@Override
-		public String toString() {
-			return String.valueOf(count);
-		}
+	public int getCount() {
+		return count;
 	}
 
 	@Override
-	public Object initializeAccumulator(final Object message) {
+	public String toString() {
+		return String.valueOf(count);
+	}
+}
+
+public class WordCounterActorProvider extends
+		MapReduceActorProvider<Accumulator, String, Integer> {
+
+	@Override
+	public Accumulator initializeAccumulator(final Object message) {
 		return new Accumulator();
 	}
 
@@ -51,17 +53,17 @@ public class WordCounterActorProvider extends MapReduceActorProvider {
 	}
 
 	@Override
-	public Object process(final Object derivedMessage) {
-		final String trimmed = ((String) derivedMessage).trim();
+	public Integer process(final String derivedMessage) {
+		final String trimmed = derivedMessage.trim();
 		if (trimmed.isEmpty()) {
-			return new Integer(0);
+			return 0;
 		}
-		return new Integer(trimmed.split("\\s+").length);
+		return trimmed.split("\\s+").length;
 	}
 
 	@Override
-	public void reduce(final Object accumulator, final Object result) {
-		((Accumulator) accumulator).add((Integer) result);
+	public void reduce(final Accumulator accumulator, final Integer result) {
+		accumulator.add(result);
 	}
 
 }
