@@ -7,13 +7,18 @@
 		<artifactId>servicebus</artifactId>
 		<version>1.0.0-SNAPSHOT</version>
 	</parent>
-	<artifactId>wordcounter</artifactId>
+	<artifactId>servicebus-client</artifactId>
 	<packaging>bundle</packaging>
-	<description>Word counter</description>
+	<description>Servicebus Client</description>
 	<dependencies>
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>servicebus-master</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>wordcounter</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 		<dependency>

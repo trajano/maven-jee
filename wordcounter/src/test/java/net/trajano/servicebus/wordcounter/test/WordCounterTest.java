@@ -9,7 +9,7 @@ import java.io.InputStreamReader;
 import net.trajano.servicebus.master.ActorProvider;
 import net.trajano.servicebus.master.internal.AkkaServiceBus;
 import net.trajano.servicebus.wordcounter.Accumulator;
-import net.trajano.servicebus.wordcounter.WordCounterActorProvider;
+import net.trajano.servicebus.wordcounter.internal.WordCounterActorProvider;
 
 import org.junit.Test;
 import org.osgi.framework.BundleContext;

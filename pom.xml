@@ -27,6 +27,7 @@
 		</dependencies>
 	</dependencyManagement>
 	<modules>
+		<module>servicebus-client</module>
 		<module>servicebus-master</module>
 		<module>wordcounter</module>
 	</modules>

@@ -1,9 +1,10 @@
-package net.trajano.servicebus.wordcounter;
+package net.trajano.servicebus.wordcounter.internal;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 
 import net.trajano.servicebus.master.MapReduceActorProvider;
+import net.trajano.servicebus.wordcounter.Accumulator;
 import akka.actor.ActorRef;
 
 public class WordCounterActorProvider extends
