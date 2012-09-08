@@ -14,7 +14,12 @@
 	<bean id="ServiceBusBean" class="net.trajano.servicebus.master.internal.AkkaServiceBus">
 		<argument ref="ActorSystem" />
 	</bean>
-	<service ref="ServiceBusBean" interface="net.trajano.servicebus.master.ServiceBus" />
+	<service ref="ServiceBusBean">
+		<interfaces>
+			<value>net.trajano.servicebus.master.ServiceBus</value>
+			<value>net.trajano.servicebus.master.AkkaActorServiceBus</value>
+		</interfaces>
+	</service>
 	<reference-list interface="net.trajano.servicebus.master.ActorProvider"
 		availability="optional">
 		<description>ActorProviders provide a facility to instantiate actors

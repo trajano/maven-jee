@@ -4,7 +4,11 @@ import static junit.framework.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.concurrent.RunnableFuture;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 import net.trajano.servicebus.master.ActorProvider;
 import net.trajano.servicebus.master.internal.AkkaServiceBus;
@@ -30,11 +34,12 @@ public class WordCounterTest {
 		final AkkaServiceBus serviceBus = new AkkaServiceBus(system);
 		final ActorProvider provider = new WordCounterActorProvider();
 		serviceBus.registerActorProvider(provider);
-		final RunnableFuture<Accumulator> ask = serviceBus.ask(
-				Accumulator.class, 2000);
+		final ExecutorService executorService = new ThreadPoolExecutor(1, 20,
+				5, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
+				executorService, 2000);
 		serviceBus.tell("/lipsum.txt");
 		serviceBus.deregisterActorProvider(provider);
-		ask.run();
 		final Accumulator result = ask.get();
 		assertEquals(512, result.getCount());
 	}
@@ -45,11 +50,12 @@ public class WordCounterTest {
 		final AkkaServiceBus serviceBus = new AkkaServiceBus(system);
 		final ActorProvider provider = new WordCounterActorProvider();
 		serviceBus.registerActorProvider(provider);
-		final RunnableFuture<Accumulator> ask = serviceBus.ask(
-				Accumulator.class, 2000);
+		final ExecutorService executorService = new ThreadPoolExecutor(1, 20,
+				5, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
+				executorService, 2000);
 		serviceBus.tell("/notes.txt");
 		serviceBus.deregisterActorProvider(provider);
-		ask.run();
 		final Accumulator result = ask.get();
 		assertEquals(8, result.getCount());
 	}
@@ -63,10 +69,11 @@ public class WordCounterTest {
 				serviceBus);
 		serviceBus.registerActorProvider(provider);
 		serviceBus.registerActorProvider(provider2);
-		final RunnableFuture<MultiAccumulator> ask = serviceBus.ask(
-				MultiAccumulator.class, 2000);
+		final ExecutorService executorService = new ThreadPoolExecutor(1, 20,
+				5, TimeUnit.SECONDS, new ArrayBlockingQueue<Runnable>(10));
+		final Future<MultiAccumulator> ask = serviceBus.ask(
+				MultiAccumulator.class, executorService, 2000);
 		serviceBus.tell(new String[] { "/lipsum.txt", "/notes.txt" });
-		ask.run();
 		final MultiAccumulator result = ask.get();
 		assertEquals(520, result.getCount());
 		serviceBus.deregisterActorProvider(provider2);

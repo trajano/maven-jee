@@ -1,5 +1,7 @@
 package net.trajano.servicebus.master;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.concurrent.RunnableFuture;
 
 public interface ServiceBus {
@@ -11,7 +13,8 @@ public interface ServiceBus {
 	 * @param messageClass
 	 * @return
 	 */
-	<T> RunnableFuture<T> ask(Class<T> messageClass, long timeout);
+	<T> Future<T> ask(Class<T> messageClass, ExecutorService executor,
+			long timeout);
 
 	void tell(Object message);
 
