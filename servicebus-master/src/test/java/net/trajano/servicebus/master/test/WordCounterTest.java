@@ -4,17 +4,14 @@ import static junit.framework.Assert.assertEquals;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.util.concurrent.RunnableFuture;
 
 import net.trajano.servicebus.master.ActorProvider;
 import net.trajano.servicebus.master.internal.AkkaServiceBus;
 
 import org.junit.Test;
 
-import scala.concurrent.Await;
-import scala.concurrent.Future;
-import scala.concurrent.util.Duration;
 import akka.actor.ActorSystem;
-import akka.util.Timeout;
 
 /**
  * Objective, I should be able to do multi-level map reduce.
@@ -49,12 +46,12 @@ public class WordCounterTest {
 		final AkkaServiceBus serviceBus = new AkkaServiceBus(system);
 		final ActorProvider provider = new WordCounterActorProvider();
 		serviceBus.registerActorProvider(provider);
-		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
-				Timeout.intToTimeout(2000));
+		final RunnableFuture<Accumulator> ask = serviceBus.ask(
+				Accumulator.class, 2000);
 		serviceBus.tell("lipsum.txt");
 		serviceBus.deregisterActorProvider(provider);
-		final Accumulator result = Await.result(ask,
-				Duration.parse("5 seconds"));
+		ask.run();
+		final Accumulator result = ask.get();
 		assertEquals(512, result.getCount());
 	}
 }

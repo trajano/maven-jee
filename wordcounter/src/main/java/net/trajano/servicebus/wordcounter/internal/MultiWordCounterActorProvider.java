@@ -2,16 +2,13 @@ package net.trajano.servicebus.wordcounter.internal;
 
 import java.util.Collections;
 import java.util.Map;
+import java.util.concurrent.RunnableFuture;
 
 import net.trajano.servicebus.master.MapReduceActorProvider;
 import net.trajano.servicebus.master.ServiceBus;
 import net.trajano.servicebus.wordcounter.Accumulator;
 import net.trajano.servicebus.wordcounter.MultiAccumulator;
-import scala.concurrent.Await;
-import scala.concurrent.Future;
-import scala.concurrent.util.Duration;
 import akka.actor.ActorRef;
-import akka.util.Timeout;
 
 public class MultiWordCounterActorProvider extends
 		MapReduceActorProvider<MultiAccumulator, String, Map<String, Integer>> {
@@ -47,11 +44,11 @@ public class MultiWordCounterActorProvider extends
 	@Override
 	public Map<String, Integer> process(final String derivedMessage)
 			throws Exception {
-		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
-				Timeout.intToTimeout(2000));
+		final RunnableFuture<Accumulator> ask = serviceBus.ask(
+				Accumulator.class, 2000);
 		serviceBus.tell(derivedMessage);
-		final Accumulator result = Await.result(ask,
-				Duration.parse("1 seconds"));
+		ask.run();
+		final Accumulator result = ask.get();
 		return Collections.singletonMap(derivedMessage, result.getCount());
 	}
 
