@@ -50,6 +50,7 @@ public class MapReduceActor<A, D, R> extends UntypedActor {
 			mappedCount = provider.map(message, worker);
 			if (mappedCount == 0) {
 				getContext().parent().tell(accumulator);
+				getContext().stop(getSelf());
 			}
 		} else if (message instanceof MapReduceIntermediateResult) {
 			provider.reduce(accumulator,

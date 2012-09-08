@@ -1,7 +1,6 @@
 package net.trajano.servicebus.wordcounter.test;
 
 import static junit.framework.Assert.assertEquals;
-import static org.mockito.Mockito.mock;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
@@ -9,10 +8,11 @@ import java.io.InputStreamReader;
 import net.trajano.servicebus.master.ActorProvider;
 import net.trajano.servicebus.master.internal.AkkaServiceBus;
 import net.trajano.servicebus.wordcounter.Accumulator;
+import net.trajano.servicebus.wordcounter.MultiAccumulator;
+import net.trajano.servicebus.wordcounter.internal.MultiWordCounterActorProvider;
 import net.trajano.servicebus.wordcounter.internal.WordCounterActorProvider;
 
 import org.junit.Test;
-import org.osgi.framework.BundleContext;
 
 import scala.concurrent.Await;
 import scala.concurrent.Future;
@@ -27,6 +27,55 @@ import akka.util.Timeout;
  * 
  */
 public class WordCounterTest {
+	@Test
+	public void lipsum() throws Exception {
+		final ActorSystem system = ActorSystem.create("PiSystem");
+		final AkkaServiceBus serviceBus = new AkkaServiceBus(system);
+		final ActorProvider provider = new WordCounterActorProvider();
+		serviceBus.registerActorProvider(provider);
+		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
+				Timeout.intToTimeout(2000));
+		serviceBus.tell("/lipsum.txt");
+		serviceBus.deregisterActorProvider(provider);
+		final Accumulator result = Await.result(ask,
+				Duration.parse("2 seconds"));
+		assertEquals(512, result.getCount());
+	}
+
+	@Test
+	public void notes() throws Exception {
+		final ActorSystem system = ActorSystem.create("PiSystem");
+		final AkkaServiceBus serviceBus = new AkkaServiceBus(system);
+		final ActorProvider provider = new WordCounterActorProvider();
+		serviceBus.registerActorProvider(provider);
+		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
+				Timeout.intToTimeout(2000));
+		serviceBus.tell("/notes.txt");
+		serviceBus.deregisterActorProvider(provider);
+		final Accumulator result = Await.result(ask,
+				Duration.parse("2 seconds"));
+		assertEquals(8, result.getCount());
+	}
+
+	@Test
+	public void noteslipsum() throws Exception {
+		final ActorSystem system = ActorSystem.create("PiSystem");
+		final AkkaServiceBus serviceBus = new AkkaServiceBus(system);
+		final ActorProvider provider = new WordCounterActorProvider();
+		final ActorProvider provider2 = new MultiWordCounterActorProvider(
+				serviceBus);
+		serviceBus.registerActorProvider(provider);
+		serviceBus.registerActorProvider(provider2);
+		final Future<MultiAccumulator> ask = serviceBus.ask(
+				MultiAccumulator.class, Timeout.intToTimeout(2000));
+		serviceBus.tell(new String[] { "/lipsum.txt", "/notes.txt" });
+		final MultiAccumulator result = Await.result(ask,
+				Duration.parse("2 seconds"));
+		assertEquals(520, result.getCount());
+		serviceBus.deregisterActorProvider(provider2);
+		serviceBus.deregisterActorProvider(provider);
+	}
+
 	/**
 	 * Tests using without any actors. Shows that the algorithm works.
 	 * 
@@ -48,21 +97,5 @@ public class WordCounterTest {
 		}
 		reader.close();
 		assertEquals(8, count);
-	}
-
-	@Test
-	public void useActivator() throws Exception {
-		final ActorSystem system = ActorSystem.create("PiSystem");
-		final AkkaServiceBus serviceBus = new AkkaServiceBus();
-		serviceBus.configure(mock(BundleContext.class), system);
-		final ActorProvider provider = new WordCounterActorProvider();
-		serviceBus.registerActorProvider(provider);
-		final Future<Accumulator> ask = serviceBus.ask(Accumulator.class,
-				Timeout.intToTimeout(2000));
-		serviceBus.tell("lipsum.txt");
-		serviceBus.deregisterActorProvider(provider);
-		final Accumulator result = Await.result(ask,
-				Duration.parse("2 seconds"));
-		assertEquals(512, result.getCount());
 	}
 }

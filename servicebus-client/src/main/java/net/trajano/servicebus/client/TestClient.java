@@ -12,13 +12,13 @@ public class TestClient {
 		{
 			final Future<Accumulator> ask = bus.ask(Accumulator.class,
 					Timeout.longToTimeout(1000));
-			bus.tell("lipsum.txt");
+			bus.tell("/lipsum.txt");
 			System.out.println(Await.result(ask, Duration.parse("2 seconds")));
 		}
 		{
 			final Future<Accumulator> ask = bus.ask(Accumulator.class,
 					Timeout.longToTimeout(1000));
-			bus.tell("notes.txt");
+			bus.tell("/notes.txt");
 			System.out.println(Await.result(ask, Duration.parse("2 seconds")));
 		}
 	}

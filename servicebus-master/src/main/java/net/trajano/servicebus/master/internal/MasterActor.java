@@ -4,14 +4,30 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.trajano.servicebus.master.ActorProvider;
+import scala.concurrent.util.Duration;
 import akka.actor.ActorRef;
+import akka.actor.OneForOneStrategy;
+import akka.actor.SupervisorStrategy;
+import akka.actor.SupervisorStrategy.Directive;
 import akka.actor.UntypedActor;
+import akka.japi.Function;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.ListMultimap;
 import com.google.common.collect.Multimaps;
 
 public class MasterActor extends UntypedActor {
+
+	private final static SupervisorStrategy supervisorStrategy = new OneForOneStrategy(
+			1, Duration.parse("1 minute"),
+			new Function<Throwable, Directive>() {
+
+				@Override
+				public Directive apply(final Throwable throwable) {
+					return SupervisorStrategy.escalate();
+				}
+
+			});
 
 	/**
 	 * I want to map a class that is being asked to a listener. However, there
@@ -49,6 +65,7 @@ public class MasterActor extends UntypedActor {
 				assertMessageClassNotHandled(messageClass);
 				providers.put(messageClass, provider);
 			}
+			getSender().tell(message);
 			return;
 		} else if (message instanceof ActorDeregistration) {
 			final ActorProvider provider = ((ActorDeregistration) message)
@@ -56,6 +73,7 @@ public class MasterActor extends UntypedActor {
 			for (final Class<?> messageClass : provider.messageClassesHandled()) {
 				providers.remove(messageClass);
 			}
+			getSender().tell(message);
 			return;
 		} else if (message instanceof Asked) {
 			final Class<?> messageClass = ((Asked) message).getMessageClass();
@@ -77,5 +95,10 @@ public class MasterActor extends UntypedActor {
 			}
 		}
 		unhandled(message);
+	}
+
+	@Override
+	public SupervisorStrategy supervisorStrategy() {
+		return supervisorStrategy;
 	}
 }

@@ -51,9 +51,9 @@ public abstract class MapReduceActorProvider<A, D, R> implements ActorProvider {
 
 			@Override
 			public UntypedActor create() {
-				return new MapReduceActor<>(MapReduceActorProvider.this);
+				return new MapReduceActor<A, D, R>(MapReduceActorProvider.this);
 			}
-		}), getClass().getName());
+		}));
 	}
 
 	/**
@@ -64,7 +64,7 @@ public abstract class MapReduceActorProvider<A, D, R> implements ActorProvider {
 	 * @return the results of the processing. This may be <code>null</code> if
 	 *         there is no response expected.
 	 */
-	public abstract R process(D derivedMessage);
+	public abstract R process(D derivedMessage) throws Exception;
 
 	/**
 	 * Combines the results into one.
@@ -74,5 +74,5 @@ public abstract class MapReduceActorProvider<A, D, R> implements ActorProvider {
 	 * @param result
 	 *            result from the work to be reduced.
 	 */
-	public abstract void reduce(A accumulator, R result);
+	public abstract void reduce(A accumulator, R result) throws Exception;
 }

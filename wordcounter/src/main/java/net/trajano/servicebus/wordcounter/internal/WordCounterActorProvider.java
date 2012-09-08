@@ -18,8 +18,7 @@ public class WordCounterActorProvider extends
 	@Override
 	public int map(final Object message, final ActorRef actor) throws Exception {
 		final BufferedReader reader = new BufferedReader(new InputStreamReader(
-				Thread.currentThread().getContextClassLoader()
-						.getResourceAsStream("lipsum.txt")));
+				getClass().getResourceAsStream(message.toString())));
 		int count = 0;
 		String line = reader.readLine();
 		while (line != null) {

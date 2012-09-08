@@ -251,9 +251,8 @@
 	</reporting>
 	<repositories>
 		<repository>
-			<id>typesafe</id>
-			<name>Typesafe Repository</name>
-			<url>http://repo.typesafe.com/typesafe/releases/</url>
+			<id>bippo-nexus-public</id>
+			<url>http://nexus.bippo.co.id/nexus/content/groups/public/</url>
 		</repository>
 	</repositories>
 	<distributionManagement>

@@ -1,23 +1,25 @@
 package net.trajano.servicebus.master.internal;
 
+import java.util.concurrent.TimeoutException;
+
 import net.trajano.servicebus.master.ActorProvider;
 import net.trajano.servicebus.master.ServiceBus;
-
-import org.osgi.framework.BundleActivator;
-import org.osgi.framework.BundleContext;
-
+import scala.concurrent.Await;
 import scala.concurrent.Future;
+import scala.concurrent.util.Duration;
 import akka.actor.ActorRef;
 import akka.actor.ActorSystem;
 import akka.actor.Props;
-import akka.osgi.ActorSystemActivator;
 import akka.pattern.Patterns;
 import akka.util.Timeout;
 
-public class AkkaServiceBus extends ActorSystemActivator implements ServiceBus,
-		BundleActivator {
+public class AkkaServiceBus implements ServiceBus {
 
-	private ActorRef master;
+	private final ActorRef master;
+
+	public AkkaServiceBus(final ActorSystem actorSystem) {
+		master = actorSystem.actorOf(new Props(MasterActor.class));
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -26,32 +28,30 @@ public class AkkaServiceBus extends ActorSystemActivator implements ServiceBus,
 				timeout);
 	}
 
-	/**
-	 * Ask system given this message, tell me the result.
-	 */
-
-	@Override
-	public void configure(final BundleContext bundleContext,
-			final ActorSystem actorSystem) {
-		master = actorSystem.actorOf(new Props(MasterActor.class));
-		registerService(bundleContext, actorSystem);
-	}
-
-	public void deregisterActorProvider(final ActorProvider provider) {
-		master.tell(new ActorDeregistration(provider));
+	public void deregisterActorProvider(final ActorProvider provider)
+			throws TimeoutException {
+		if (provider != null) {
+			final Future<Object> future = Patterns.ask(master,
+					new ActorDeregistration(provider), 1000);
+			Await.ready(future, Duration.Inf());
+		}
 	}
 
 	public ActorRef getMaster() {
 		return master;
 	}
 
-	public void registerActorProvider(final ActorProvider provider) {
-		master.tell(new ActorRegistration(provider));
+	public void registerActorProvider(final ActorProvider provider)
+			throws TimeoutException {
+		if (provider != null) {
+			final Future<Object> future = Patterns.ask(master,
+					new ActorRegistration(provider), 1000);
+			Await.ready(future, Duration.Inf());
+		}
 	}
 
 	@Override
 	public void tell(final Object message) {
 		master.tell(message);
 	}
-
 }

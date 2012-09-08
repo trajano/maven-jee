@@ -8,6 +8,9 @@ import akka.actor.Props;
 import akka.actor.UntypedActor;
 import akka.actor.UntypedActorFactory;
 
+/**
+ * This {@link ActorProvider} will always throw an {@link Exception}.
+ */
 public class ExceptionalActorProvider implements ActorProvider {
 
 	@Override
@@ -29,7 +32,8 @@ public class ExceptionalActorProvider implements ActorProvider {
 				return new UntypedActor() {
 
 					@Override
-					public void onReceive(final Object arg0) throws Exception {
+					public void onReceive(final Object message)
+							throws Exception {
 						throw new Exception("always exception");
 					}
 				};
