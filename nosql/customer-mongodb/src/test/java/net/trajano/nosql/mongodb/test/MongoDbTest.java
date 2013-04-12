@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.util.UUID;
 
 import net.trajano.maven_jee6.test.LogUtil;
 
@@ -37,7 +36,7 @@ public class MongoDbTest {
 
 	@BeforeClass
 	public static void setMongoDB() throws IOException {
-		testsFactory = MongodForTestsFactory.with(Version.Main.V2_0);
+		testsFactory = MongodForTestsFactory.with(Version.Main.PRODUCTION);
 	}
 
 	@AfterClass
@@ -49,9 +48,8 @@ public class MongoDbTest {
 
 	@Before
 	public void setUpMongoDB() throws Exception {
-		// create database
 		final Mongo mongo = testsFactory.newMongo();
-		db = mongo.getDB(UUID.randomUUID().toString());
+		db = testsFactory.newDB(mongo);
 	}
 
 	/**

@@ -1,22 +1,18 @@
-
-
 package net.trajano.nosql.mongodb.scala.test
 
 import java.util.Date
 import java.util.UUID
-
 import org.junit.runner.RunWith
 import org.scalatest.BeforeAndAfterAll
 import org.scalatest.FunSpec
-import org.scalatest.junit.JUnitRunner
 import org.scalatest.matchers.ShouldMatchers
-
 import de.flapdoodle.embed.mongo.distribution.Version
 import de.flapdoodle.embed.mongo.tests.MongodForTestsFactory
 import net.trajano.maven_jee6.test.LogUtil
 import net.trajano.nosql.Customer
 import net.trajano.nosql.internal.MongoDbCustomers
 import net.trajano.nosql.mongodb.test.CdiProducer
+import org.scalatest.junit.JUnitRunner
 
 @RunWith(classOf[JUnitRunner])
 class CustomersTest extends FunSpec with ShouldMatchers with BeforeAndAfterAll {
