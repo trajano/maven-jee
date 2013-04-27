@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/"
+	version="1.1" width="1070" height="570">
+	<title property="dc:title">Zachman Framework Model</title>
+	<desc property="dc:creator">Archimedes Trajano</desc>
+	<metadata id="license" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:cc="http://creativecommons.org/ns#">
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<dc:format>image/svg+xml</dc:format>
+				<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+				<cc:license rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+			</cc:Work>
+			<cc:License rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction" />
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution" />
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Notice" />
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution" />
+				<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+				<cc:requires rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+			</cc:License>
+		</rdf:RDF>
+	</metadata>
+
+	<defs>
+		<style type="text/css"><![CDATA[
+			@import
+			url(http://fonts.googleapis.com/css?family=Noto+Sans);
+
+			.outer rect {
+			stroke: black;
+			fill: #C195ED;
+			stroke-width: 2;
+			}
+
+			.inner rect,
+			rect.inner{
+			stroke: black;
+			fill: none;
+			stroke-width: 2;
+			}
+			
+			.inner.selected  rect{
+			fill: #B5FFAB;
+			}
+
+			text {
+			fill: black;
+			text-anchor: middle;
+			dominant-baseline: middle;
+			font-size: 20px;
+			font-family: 'Noto Sans', sans-serif;
+			}
+			
+			.outer text {
+			font-size: 20px;
+			}
+
+			.inner text {
+			font-size: 14px;
+			}
+		]]></style>
+	</defs>
+	<g transform="translate(10,10)">
+
+		<g>
+			<g class="outer" transform="translate(0, 50)">
+				<rect x="0" y="0" width="150" height="100" class="outer" />
+				<text x="75" y="50" class="outer">Contextual</text>
+			</g>
+			<g class="outer" transform="translate(0, 150)">
+				<rect x="0" y="0" width="150" height="100" class="outer" />
+				<text x="75" y="50" class="outer">Conceptual</text>
+			</g>
+			<g class="outer" transform="translate(0, 250)">
+				<rect x="0" y="0" width="150" height="100" class="outer" />
+				<text x="75" y="50" class="outer">Logical</text>
+			</g>
+			<g class="outer" transform="translate(0, 350)">
+				<rect x="0" y="0" width="150" height="100" class="outer" />
+				<text x="75" y="50" class="outer">Physical</text>
+			</g>
+			<g class="outer" transform="translate(0, 450)">
+				<rect x="0" y="0" width="150" height="100" class="outer" />
+				<text x="75" y="50" class="outer">Detailed</text>
+			</g>
+		</g>
+
+		<g transform="translate(150)">
+			<g class="outer">
+				<rect x="0" y="0" width="150" height="50" />
+				<text x="75" y="25">Why</text>
+			</g>
+
+			<g transform="translate(0, 50)" class="inner selected" >
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Goal list</text>
+			</g>
+
+			<g transform="translate(0, 150)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Goal relationship</text>
+			</g>
+
+			<g transform="translate(0, 250)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Rules diagram</text>
+			</g>
+
+			<g transform="translate(0, 350)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Rules</text>
+				<text x="75" y="60">specification</text>
+			</g>
+
+			<g transform="translate(0, 450)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Rule details</text>
+			</g>
+		</g>
+
+		<g transform="translate(300)">
+			<g class="outer">
+				<rect x="0" y="0" width="150" height="50" />
+				<text x="75" y="25">How</text>
+			</g>
+
+			<g class="inner" transform="translate(0, 50)">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Process list</text>
+			</g>
+
+			<g transform="translate(0, 150)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Process model</text>
+			</g>
+
+			<g transform="translate(0, 250)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Process diagram</text>
+			</g>
+
+			<g transform="translate(0, 350)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Process function</text>
+				<text x="75" y="60">specification</text>
+			</g>
+
+			<g transform="translate(0, 450)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Process details</text>
+			</g>
+		</g>
+
+		<g transform="translate(450)">
+			<g class="outer">
+				<rect x="0" y="0" width="150" height="50" />
+				<text x="75" y="25">What</text>
+			</g>
+
+			<g class="inner" transform="translate(0, 50)">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Material list</text>
+			</g>
+
+			<g transform="translate(0, 150)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Entity</text>
+				<text x="75" y="60">relationship model</text>
+			</g>
+
+			<g transform="translate(0, 250)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Data model</text>
+				<text x="75" y="60">diagram</text>
+			</g>
+
+			<g transform="translate(0, 350)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Data entity</text>
+				<text x="75" y="60">specification</text>
+			</g>
+
+			<g transform="translate(0, 450)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Data details</text>
+			</g>
+		</g>
+
+		<g transform="translate(600)">
+			<g class="outer">
+				<rect x="0" y="0" width="150" height="50" />
+				<text x="75" y="25">Who</text>
+			</g>
+
+			<g class="inner" transform="translate(0, 50)">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="30">Organizational</text>
+				<text x="75" y="50">unit and</text>
+				<text x="75" y="70">role list</text>
+			</g>
+
+			<g transform="translate(0, 150)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="30">Organizational</text>
+				<text x="75" y="50">unit and role</text>
+				<text x="75" y="70">relationship model</text>
+			</g>
+
+			<g transform="translate(0, 250)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="30">Role</text>
+				<text x="75" y="50">relationship </text>
+				<text x="75" y="70">diagram</text>
+			</g>
+
+			<g transform="translate(0, 350)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Role</text>
+				<text x="75" y="60">specification</text>
+			</g>
+
+			<g transform="translate(0, 450)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Role details</text>
+			</g>
+		</g>
+
+		<g transform="translate(750)">
+			<g class="outer">
+				<rect x="0" y="0" width="150" height="50" />
+				<text x="75" y="25">Where</text>
+			</g>
+
+			<g class="inner" transform="translate(0, 50)">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Geographical</text>
+				<text x="75" y="60">location list</text>
+			</g>
+
+			<g transform="translate(0, 150)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Locations</text>
+				<text x="75" y="60">model</text>
+			</g>
+
+			<g transform="translate(0, 250)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Location</text>
+				<text x="75" y="60">diagram</text>
+			</g>
+
+			<g transform="translate(0, 350)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Location</text>
+				<text x="75" y="60">specification</text>
+			</g>
+
+			<g transform="translate(0, 450)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Location details</text>
+			</g>
+		</g>
+
+		<g transform="translate(900)">
+			<g class="outer">
+				<rect x="0" y="0" width="150" height="50" />
+				<text x="75" y="25">When</text>
+			</g>
+
+			<g class="inner" transform="translate(0, 50)">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Event list</text>
+			</g>
+
+			<g transform="translate(0, 150)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Event model</text>
+			</g>
+
+			<g transform="translate(0, 250)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Event diagram</text>
+			</g>
+
+			<g transform="translate(0, 350)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="40">Event</text>
+				<text x="75" y="60">specification</text>
+			</g>
+
+			<g transform="translate(0, 450)" class="inner">
+				<rect x="0" y="0" width="150" height="100" />
+				<text x="75" y="50">Event details</text>
+			</g>
+		</g>
+	</g>
+</svg>

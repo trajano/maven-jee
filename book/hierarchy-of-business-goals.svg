@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/"
+	version="1.1" width="335" height="220">
+	<title property="dc:title">Hierarchy of business goals</title>
+	<desc property="dc:creator">Archimedes Trajano</desc>
+	<metadata id="license" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+		xmlns:cc="http://creativecommons.org/ns#">
+		<rdf:RDF>
+			<cc:Work rdf:about="">
+				<dc:format>image/svg+xml</dc:format>
+				<dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+				<cc:license rdf:resource="http://creativecommons.org/licenses/by-sa/3.0/" />
+			</cc:Work>
+			<cc:License rdf:about="http://creativecommons.org/licenses/by-sa/3.0/">
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Reproduction" />
+				<cc:permits rdf:resource="http://creativecommons.org/ns#Distribution" />
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Notice" />
+				<cc:requires rdf:resource="http://creativecommons.org/ns#Attribution" />
+				<cc:permits rdf:resource="http://creativecommons.org/ns#DerivativeWorks" />
+				<cc:requires rdf:resource="http://creativecommons.org/ns#ShareAlike" />
+			</cc:License>
+		</rdf:RDF>
+	</metadata>
+
+	<defs>
+		<style type="text/css">
+			@import
+			url(http://fonts.googleapis.com/css?family=Noto+Sans);
+
+			.label {
+			text-anchor: end;
+			dominant-baseline: middle;
+			font-size: 12pt;
+			font-family: 'Noto Sans', sans-serif;
+			}
+		</style>
+	</defs>
+
+	<g transform="translate(10,10)">
+		<!-- colors from http://www.colourlovers.com/palette/1523080/hierarchy. -->
+		<polygon points="115.470054,0 0,200 230.940108,200" fill="#87776F"
+			stroke="black" stroke-linejoin="round" />
+		<polygon points="115.470054,0 28.867513,150 202.072594,150"
+			fill="#61AB9B" stroke="black" stroke-linejoin="round" />
+		<polygon points="115.470054,0 57.735027,100 173.2050808,100"
+			fill="#C7B2A7" stroke="black" stroke-linejoin="round" />
+		<polygon points="115.470054,0 86.602540,50 144.337567,50"
+			fill="#EBD9D1" stroke="black" stroke-linejoin="round" />
+
+		<line x1="28.867513" y1="150" x2="325" y2="150" stroke="black" />
+		<line x1="57.735027" y1="100" x2="325" y2="100" stroke="black" />
+		<line x1="86.602540" y1="50" x2="325" y2="50" stroke="black" />
+
+		<text x="325" y="25" class="label">Rewarding</text>
+		<text x="325" y="75" class="label">Growth</text>
+		<text x="325" y="125" class="label">Sustainability</text>
+		<text x="325" y="175" class="label">Legitimacy</text>
+	</g>
+</svg>
