@@ -19,7 +19,6 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
 		</dependency>
 		<dependency>
 			<groupId>com.sun.jersey</groupId>
@@ -34,7 +33,7 @@
 		<dependency>
 			<groupId>org.apache.activemq</groupId>
 			<artifactId>activemq-core</artifactId>
-			<version>5.6.0</version>
+			<version>5.7.0</version>
 			<exclusions>
 				<exclusion>
 					<groupId>commons-logging</groupId>
@@ -45,6 +44,11 @@
 					<artifactId>snappy-java</artifactId>
 				</exclusion>
 			</exclusions>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>3.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.derby</groupId>
