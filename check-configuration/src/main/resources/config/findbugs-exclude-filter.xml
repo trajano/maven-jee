@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8" ?>
-<FindBugsFilter>
-	<Match>
-		<!-- Ignore this bug pattern because generally the interface representing 
-			the WebService would match the class of the implementation so the name would 
-			appear correctly on the generated endpoint URL. -->
-		<Bug pattern="NM_SAME_SIMPLE_NAME_AS_INTERFACE" />
-	</Match>
-</FindBugsFilter>
