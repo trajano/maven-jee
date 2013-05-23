@@ -136,14 +136,6 @@
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.mojo</groupId>
-					<artifactId>versions-maven-plugin</artifactId>
-					<version>2.0</version>
-					<configuration>
-						<rulesUri>http://site.trajano.net/coding-standards/maven-version-rules.xml</rulesUri>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>org.codehaus.mojo</groupId>
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>2.5.1</version>
 				</plugin>
