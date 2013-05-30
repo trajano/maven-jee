@@ -17,6 +17,11 @@
 	</description>
 	<dependencies>
 		<dependency>
+			<groupId>net.trajano.commons</groupId>
+			<artifactId>commons-testing</artifactId>
+			<version>1.0.0</version>
+		</dependency>
+		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 		</dependency>
