@@ -10,7 +10,7 @@
 	<parent>
 		<groupId>net.trajano.project</groupId>
 		<artifactId>javaee-project</artifactId>
-		<version>1-SNAPSHOT</version>
+		<version>1</version>
 		<relativePath>remote</relativePath>
 	</parent>
 	<properties>
@@ -22,15 +22,6 @@
 	<prerequisites>
 		<maven>3.0.0</maven>
 	</prerequisites>
-	<dependencies>
-		<dependency>
-			<groupId>org.jboss.spec</groupId>
-			<artifactId>jboss-javaee-6.0</artifactId>
-			<version>1.0.0.Final</version>
-			<type>pom</type>
-			<scope>provided</scope>
-		</dependency>
-	</dependencies>
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
